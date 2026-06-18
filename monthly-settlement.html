@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>月度待结算 - 连续劳务平台</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #515a6e;
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      background: #f7f9fc;
+    }
+
+    .sidebar {
+      width: 200px;
+      flex: 0 0 200px;
+      background: #fff;
+      border-right: 1px solid #e8edf5;
+      box-shadow: 2px 0 8px rgba(17, 31, 44, .05);
+      z-index: 2;
+    }
+
+    .brand {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 10px;
+      border-bottom: 1px solid #f2f4f8;
+    }
+
+    .brand-mark {
+      font-size: 26px;
+      line-height: 1;
+      color: #ff9800;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand-name {
+      color: #202938;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu {
+      padding: 14px 0;
+    }
+
+    .menu-group {
+      margin-bottom: 6px;
+    }
+
+    .menu-title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px 0 36px;
+      color: #4d4f53;
+      position: relative;
+    }
+
+    .menu-title::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border: 2px solid #606266;
+      border-radius: 50%;
+      position: absolute;
+      left: 13px;
+    }
+
+    .menu-title::after {
+      content: "^";
+      margin-left: auto;
+      color: #8a8f99;
+      font-size: 12px;
+    }
+
+    .menu-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding-left: 38px;
+      color: #606266;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .menu-item.active {
+      color: #2f8cf0;
+      background: #fff;
+      font-weight: 500;
+    }
+
+    .main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 52px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .tabs {
+      display: flex;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .tab {
+      min-width: 112px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #f1f3f7;
+      color: #303133;
+      background: #fff;
+    }
+
+    .tab.active {
+      color: #2f8cf0;
+      background: #f7fbff;
+    }
+
+    .tab-close {
+      margin-left: 8px;
+      color: #9aa4b2;
+    }
+
+    .top-actions {
+      margin-left: auto;
+      padding-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #2586ee;
+      font-size: 13px;
+    }
+
+    .full-screen {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #2586ee;
+      border-radius: 3px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2f8cf0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .content {
+      flex: 1;
+      margin: 10px 10px 0 18px;
+      background: #fff;
+      border-left: 1px solid #edf1f7;
+      border-right: 1px solid #edf1f7;
+      overflow: hidden;
+    }
+
+    .filter {
+      padding: 16px 18px 16px;
+      border-bottom: 1px solid #dde5ef;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+      gap: 12px 20px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      color: #7b8494;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #d7dee9;
+      border-radius: 4px;
+      padding: 0 10px;
+      color: #515a6e;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input::placeholder {
+      color: #b6beca;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #2f8cf0;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      height: 32px;
+      min-width: 58px;
+      padding: 0 16px;
+      border-radius: 4px;
+      border: 1px solid #d7dee9;
+      background: #fff;
+      color: #515a6e;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: #2f8cf0;
+      background: #2f8cf0;
+    }
+
+    .btn:disabled {
+      color: #a7afbc;
+      background: #f4f6f9;
+      border-color: #e1e6ef;
+      cursor: not-allowed;
+    }
+
+    .toolbar {
+      height: 54px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-setting {
+      margin-left: auto;
+      width: 36px;
+      min-width: 36px;
+      padding: 0;
+      color: #7c8797;
+    }
+
+    .table-wrap {
+      margin: 0 18px;
+      border: 1px solid #e5e9f0;
+      overflow: auto;
+      height: calc(100vh - 230px);
+      min-height: 420px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 1900px;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      height: 36px;
+      padding: 0 10px;
+      border-right: 1px solid #e9edf3;
+      border-bottom: 1px solid #e9edf3;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      color: #4e5969;
+      background: #f6f8fb;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(1) {
+      background: #edf6ff;
+    }
+
+    tbody tr:hover {
+      background: #f5faff;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .money {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .link {
+      color: #2586ee;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      margin-right: 9px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .tag.wait-confirm {
+      color: #d46b08;
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+    }
+
+    .tag.wait-pay {
+      color: #1677ff;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+    }
+
+    .tag.paying {
+      color: #722ed1;
+      background: #f9f0ff;
+      border: 1px solid #d3adf7;
+    }
+
+    .tag.paid {
+      color: #389e0d;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+
+    .tag.failed {
+      color: #cf1322;
+      background: #fff1f0;
+      border: 1px solid #ffa39e;
+    }
+
+    .tag.canceled {
+      color: #606266;
+      background: #f4f4f5;
+      border: 1px solid #dcdfe6;
+    }
+
+    .pagination {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 0 18px;
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .page-btn {
+      min-width: 30px;
+      height: 28px;
+      border: 1px solid #d7dee9;
+      background: #fff;
+      color: #606266;
+      border-radius: 4px;
+    }
+
+    .page-btn.active {
+      color: #fff;
+      background: #2f8cf0;
+      border-color: #2f8cf0;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .35);
+      z-index: 20;
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 680px;
+      max-width: calc(100vw - 40px);
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+    }
+
+    .modal.small {
+      width: 520px;
+    }
+
+    .modal-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid #edf1f7;
+      color: #303133;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      margin-left: auto;
+      border: 0;
+      background: transparent;
+      color: #9098a6;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      padding: 18px 20px 8px;
+      max-height: 70vh;
+      overflow: auto;
+    }
+
+    .modal-footer {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 0 20px;
+      border-top: 1px solid #edf1f7;
+    }
+
+    .detail-section {
+      margin-bottom: 18px;
+    }
+
+    .detail-title {
+      color: #303133;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding-left: 8px;
+      border-left: 3px solid #2f8cf0;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid #edf1f7;
+      border-left: 1px solid #edf1f7;
+    }
+
+    .detail-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      min-height: 38px;
+      border-right: 1px solid #edf1f7;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .detail-label {
+      padding: 10px 12px;
+      color: #7b8494;
+      background: #f8fafc;
+    }
+
+    .detail-value {
+      padding: 10px 12px;
+      color: #303133;
+    }
+
+    .confirm-text {
+      margin: 0 0 16px;
+      color: #303133;
+      line-height: 1.7;
+    }
+
+    .summary-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .summary-item {
+      padding: 12px;
+      background: #f7f9fc;
+      border: 1px solid #edf1f7;
+      border-radius: 4px;
+    }
+
+    .summary-label {
+      color: #7b8494;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      color: #303133;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      min-width: 260px;
+      padding: 10px 16px;
+      color: #1677ff;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+      border-radius: 4px;
+      text-align: center;
+      z-index: 30;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .sidebar {
+        width: 168px;
+        flex-basis: 168px;
+      }
+
+      .filter-grid {
+        grid-template-columns: repeat(3, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">悠客</div>
+        <div class="brand-name">智工快达</div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-group">
+          <div class="menu-title">用工管理</div>
+          <a class="menu-item" href="#">需求发布</a>
+          <a class="menu-item" href="#">交付审核</a>
+          <a class="menu-item" href="#">招募与审核</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">财务结算</div>
+          <a class="menu-item" href="#">人员结算</a>
+          <a class="menu-item active" href="#">月度待结算</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">人员管理</div>
+          <a class="menu-item" href="#">人员管理</a>
+          <a class="menu-item" href="#">个人协议</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">服务商管理</div>
+          <a class="menu-item" href="#">个人平台协议</a>
+          <a class="menu-item" href="#">客户管理</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">账号管理</div>
+          <a class="menu-item" href="#">角色管理</a>
+          <a class="menu-item" href="#">账号管理</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="tabs">
+          <div class="tab">人员结算</div>
+          <div class="tab active">月度待结算 <span class="tab-close">x</span></div>
+        </div>
+        <div class="top-actions">
+          <span>连续劳务计算器</span>
+          <span class="full-screen" aria-hidden="true"></span>
+          <span class="avatar">provider</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="filter">
+          <div class="filter-grid">
+            <div class="field">
+              <label>结算月份</label>
+              <input id="settlementMonth" type="month" value="2026-05">
+            </div>
+            <div class="field">
+              <label>人员姓名</label>
+              <input id="personName" placeholder="请输入人员姓名">
+            </div>
+            <div class="field">
+              <label>手机号</label>
+              <input id="mobile" placeholder="请输入手机号">
+            </div>
+            <div class="field">
+              <label>证件号码</label>
+              <input id="idCardNo" placeholder="请输入证件号码">
+            </div>
+            <div class="field">
+              <label>服务商名称</label>
+              <select id="serviceProvider">
+                <option value="">请选择服务商</option>
+                <option>服务商管理1</option>
+                <option>服务商管理2</option>
+                <option>华东连续劳务服务商</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>结算状态</label>
+              <select id="settlementStatus">
+                <option value="">请选择结算状态</option>
+                <option value="WAIT_CONFIRM">待确认</option>
+                <option value="WAIT_PAY">待付款</option>
+                <option value="PAYING">付款中</option>
+                <option value="PAID">已付款</option>
+                <option value="PAY_FAILED">付款失败</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column: span 2;">
+              <label>创建时间</label>
+              <input id="createTime" placeholder="请选择创建时间，如 2026-06-01 ~ 2026-06-30">
+            </div>
+            <div class="filter-actions">
+              <button class="btn primary" id="searchBtn">搜索</button>
+              <button class="btn" id="resetBtn">重置</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn primary" id="exportBtn">导出</button>
+          <button class="btn primary" id="batchConfirmBtn">批量确认</button>
+          <button class="btn primary" id="batchPayBtn">批量发起付款</button>
+          <button class="btn table-setting" title="表格设置">设置</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="center" style="width: 46px;"><input type="checkbox" id="checkAll"></th>
+                <th class="center" style="width: 56px;">序号</th>
+                <th style="width: 180px;">操作</th>
+                <th style="width: 110px;">结算月份</th>
+                <th style="width: 100px;">人员姓名</th>
+                <th style="width: 130px;">手机号</th>
+                <th style="width: 180px;">证件号码</th>
+                <th style="width: 150px;">服务商名称</th>
+                <th class="center" style="width: 110px;">待结算笔数</th>
+                <th class="money" style="width: 130px;">待结算金额</th>
+                <th class="money" style="width: 140px;">预扣预缴税额</th>
+                <th class="money" style="width: 130px;">实付金额</th>
+                <th style="width: 110px;">银行户名</th>
+                <th style="width: 180px;">银行账号</th>
+                <th style="width: 180px;">开户行</th>
+                <th style="width: 120px;">支付方式</th>
+                <th style="width: 100px;">结算状态</th>
+                <th style="width: 180px;">银行流水号</th>
+                <th style="width: 180px;">失败原因</th>
+                <th style="width: 170px;">创建时间</th>
+                <th style="width: 170px;">更新时间</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span>共 6 条</span>
+          <button class="page-btn">&lt;</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">&gt;</button>
+          <select class="page-btn" style="width: 78px;">
+            <option>10条/页</option>
+            <option>20条/页</option>
+            <option>50条/页</option>
+          </select>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-mask" id="detailModal">
+    <div class="modal">
+      <div class="modal-header">
+        月度待结算详情
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+      <div class="modal-footer">
+        <button class="btn" data-close>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="confirmModal">
+    <div class="modal small">
+      <div class="modal-header">
+        确认结算
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">确认后选中的结算记录将进入“待付款”状态，是否确认？</p>
+        <div class="summary-box">
+          <div class="summary-item">
+            <div class="summary-label">待结算金额</div>
+            <div class="summary-value" id="confirmAmount">¥0.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">预扣预缴税额</div>
+            <div class="summary-value" id="confirmTax">¥0.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">实付金额</div>
+            <div class="summary-value" id="confirmPay">¥0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>取消</button>
+        <button class="btn primary" id="confirmSubmit">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="payModal">
+    <div class="modal small">
+      <div class="modal-header">
+        发起付款
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">发起付款后将直接调用银企直联进行付款，请确认付款信息。</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">付款人数</div>
+            <div class="detail-value" id="payCount">0 人</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">付款总金额</div>
+            <div class="detail-value" id="payTotal">¥0.00</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">付款批次号</div>
+            <div class="detail-value" id="payBatchNo">PAY202606180001</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">银企通道</div>
+            <div class="detail-value">默认银企直联通道</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>取消</button>
+        <button class="btn primary" id="paySubmit">发起付款</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="cancelModal">
+    <div class="modal small">
+      <div class="modal-header">
+        取消付款
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">取消后该结算记录将变为“已取消”状态，不能继续发起付款，是否确认取消？</p>
+        <div class="summary-box">
+          <div class="summary-item">
+            <div class="summary-label">待结算金额</div>
+            <div class="summary-value" id="cancelAmount">¥0.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">预扣预缴税额</div>
+            <div class="summary-value" id="cancelTax">¥0.00</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">实付金额</div>
+            <div class="summary-value" id="cancelPay">¥0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>取消</button>
+        <button class="btn primary" id="cancelSubmit">确认取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const rows = [
+      {
+        id: "S202605001",
+        month: "2026-05",
+        name: "施玉清",
+        mobile: "133****4970",
+        idCard: "32058619870121****",
+        provider: "服务商管理1",
+        count: 8,
+        amount: 12000,
+        tax: 880,
+        pay: 11120,
+        bankName: "施玉清",
+        bankNo: "6222 **** **** 7815",
+        bank: "招商银行南京分行",
+        payMethod: "银企直联",
+        status: "WAIT_CONFIRM",
+        bankSerialNo: "",
+        failReason: "",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-01 01:10:24"
+      },
+      {
+        id: "S202605002",
+        month: "2026-05",
+        name: "陶泓",
+        mobile: "139****0329",
+        idCard: "32052519891014****",
+        provider: "服务商管理1",
+        count: 5,
+        amount: 8600,
+        tax: 520,
+        pay: 8080,
+        bankName: "陶泓",
+        bankNo: "6228 **** **** 3015",
+        bank: "中国银行苏州支行",
+        payMethod: "银企直联",
+        status: "WAIT_PAY",
+        bankSerialNo: "",
+        failReason: "",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-02 09:28:43"
+      },
+      {
+        id: "S202605003",
+        month: "2026-05",
+        name: "王五",
+        mobile: "138****0002",
+        idCard: "32010419920202****",
+        provider: "服务商管理1",
+        count: 3,
+        amount: 5200,
+        tax: 280,
+        pay: 4920,
+        bankName: "王五",
+        bankNo: "6217 **** **** 2234",
+        bank: "建设银行南京鼓楼支行",
+        payMethod: "银企直联",
+        status: "PAY_FAILED",
+        bankSerialNo: "BNK202606030019",
+        failReason: "收款账户信息有误",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-03 15:36:08"
+      },
+      {
+        id: "S202605004",
+        month: "2026-05",
+        name: "李明",
+        mobile: "137****8841",
+        idCard: "32108119960519****",
+        provider: "华东连续劳务服务商",
+        count: 11,
+        amount: 16800,
+        tax: 1350,
+        pay: 15450,
+        bankName: "李明",
+        bankNo: "6214 **** **** 0931",
+        bank: "工商银行上海分行",
+        payMethod: "银企直联",
+        status: "PAYING",
+        bankSerialNo: "BNK202606050088",
+        failReason: "",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-05 10:18:15"
+      },
+      {
+        id: "S202605005",
+        month: "2026-05",
+        name: "周莉",
+        mobile: "136****7215",
+        idCard: "32068219940826****",
+        provider: "服务商管理2",
+        count: 6,
+        amount: 9300,
+        tax: 610,
+        pay: 8690,
+        bankName: "周莉",
+        bankNo: "6226 **** **** 6288",
+        bank: "农业银行南通支行",
+        payMethod: "银企直联",
+        status: "PAID",
+        bankSerialNo: "BNK202606040231",
+        failReason: "",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-04 11:20:33"
+      },
+      {
+        id: "S202605006",
+        month: "2026-05",
+        name: "赵强",
+        mobile: "135****6620",
+        idCard: "32011319901108****",
+        provider: "服务商管理2",
+        count: 4,
+        amount: 7100,
+        tax: 410,
+        pay: 6690,
+        bankName: "赵强",
+        bankNo: "6230 **** **** 7742",
+        bank: "交通银行南京新街口支行",
+        payMethod: "银企直联",
+        status: "WAIT_PAY",
+        bankSerialNo: "",
+        failReason: "",
+        createTime: "2026-06-01 01:10:24",
+        updateTime: "2026-06-02 10:12:06"
+      }
+    ];
+
+    const statusMap = {
+      WAIT_CONFIRM: { text: "待确认", cls: "wait-confirm" },
+      WAIT_PAY: { text: "待付款", cls: "wait-pay" },
+      PAYING: { text: "付款中", cls: "paying" },
+      PAID: { text: "已付款", cls: "paid" },
+      PAY_FAILED: { text: "付款失败", cls: "failed" },
+      CANCELED: { text: "已取消", cls: "canceled" }
+    };
+
+    let currentActionRows = [];
+
+    function currency(value) {
+      return "¥" + Number(value).toLocaleString("zh-CN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function renderRows(data) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = data.map((row, index) => {
+        const status = statusMap[row.status];
+        const actions = getActions(row);
+        return `
+          <tr data-id="${row.id}">
+            <td class="center"><input type="checkbox" class="row-check" value="${row.id}"></td>
+            <td class="center">${index + 1}</td>
+            <td>${actions}</td>
+            <td>${row.month}</td>
+            <td>${row.name}</td>
+            <td>${row.mobile}</td>
+            <td>${row.idCard}</td>
+            <td>${row.provider}</td>
+            <td class="center">${row.count}</td>
+            <td class="money">${currency(row.amount)}</td>
+            <td class="money">${currency(row.tax)}</td>
+            <td class="money">${currency(row.pay)}</td>
+            <td>${row.bankName}</td>
+            <td>${row.bankNo}</td>
+            <td>${row.bank}</td>
+            <td>${row.payMethod}</td>
+            <td><span class="tag ${status.cls}">${status.text}</span></td>
+            <td>${row.bankSerialNo || "-"}</td>
+            <td>${row.failReason || "-"}</td>
+            <td>${row.createTime}</td>
+            <td>${row.updateTime}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function getActions(row) {
+      const base = `<button class="link" data-action="detail" data-id="${row.id}">查看</button>`;
+      if (row.status === "WAIT_CONFIRM") {
+        return base + `<button class="link" data-action="confirm" data-id="${row.id}">确认结算</button>`;
+      }
+      if (row.status === "WAIT_PAY") {
+        return base
+          + `<button class="link" data-action="pay" data-id="${row.id}">发起付款</button>`
+          + `<button class="link" data-action="cancel" data-id="${row.id}">取消付款</button>`;
+      }
+      if (row.status === "PAY_FAILED") {
+        return base + `<button class="link" data-action="retry" data-id="${row.id}">重新付款</button>`;
+      }
+      return base;
+    }
+
+    function findRows(ids) {
+      return rows.filter(row => ids.includes(row.id));
+    }
+
+    function selectedRows() {
+      const ids = Array.from(document.querySelectorAll(".row-check:checked")).map(input => input.value);
+      return findRows(ids);
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("show");
+    }
+
+    function closeModals() {
+      document.querySelectorAll(".modal-mask").forEach(modal => modal.classList.remove("show"));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function showDetail(row) {
+      const status = statusMap[row.status].text;
+      document.getElementById("detailBody").innerHTML = `
+        ${detailSection("人员信息", [
+          ["人员姓名", row.name],
+          ["手机号", row.mobile],
+          ["证件号码", row.idCard],
+          ["服务商名称", row.provider]
+        ])}
+        ${detailSection("结算信息", [
+          ["结算月份", row.month],
+          ["待结算笔数", row.count + " 笔"],
+          ["待结算金额", currency(row.amount)],
+          ["预扣预缴税额", currency(row.tax)],
+          ["实付金额", currency(row.pay)],
+          ["结算状态", status]
+        ])}
+        ${detailSection("银行信息", [
+          ["银行户名", row.bankName],
+          ["银行账号", row.bankNo],
+          ["开户行", row.bank],
+          ["支付方式", row.payMethod],
+          ["银行流水号", row.bankSerialNo || "-"]
+        ])}
+        ${detailSection("状态信息", [
+          ["失败原因", row.failReason || "-"],
+          ["创建时间", row.createTime],
+          ["更新时间", row.updateTime],
+          ["结算记录ID", row.id]
+        ])}
+      `;
+      openModal("detailModal");
+    }
+
+    function detailSection(title, items) {
+      return `
+        <div class="detail-section">
+          <div class="detail-title">${title}</div>
+          <div class="detail-grid">
+            ${items.map(([label, value]) => `
+              <div class="detail-item">
+                <div class="detail-label">${label}</div>
+                <div class="detail-value">${value}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function showConfirm(targetRows) {
+      if (!targetRows.length) {
+        showToast("请先选择待确认记录");
+        return;
+      }
+      if (targetRows.some(row => row.status !== "WAIT_CONFIRM")) {
+        showToast("只能确认“待确认”状态的记录");
+        return;
+      }
+      currentActionRows = targetRows;
+      updateSummary("confirmAmount", "confirmTax", "confirmPay", targetRows);
+      openModal("confirmModal");
+    }
+
+    function showPay(targetRows) {
+      if (!targetRows.length) {
+        showToast("请先选择待付款记录");
+        return;
+      }
+      if (targetRows.some(row => !["WAIT_PAY", "PAY_FAILED"].includes(row.status))) {
+        showToast("只能对待付款或付款失败记录发起付款");
+        return;
+      }
+      currentActionRows = targetRows;
+      const total = targetRows.reduce((sum, row) => sum + row.pay, 0);
+      document.getElementById("payCount").textContent = targetRows.length + " 人";
+      document.getElementById("payTotal").textContent = currency(total);
+      document.getElementById("payBatchNo").textContent = "PAY" + Date.now().toString().slice(-12);
+      openModal("payModal");
+    }
+
+    function showCancel(targetRows) {
+      if (!targetRows.length) {
+        showToast("请选择待付款记录");
+        return;
+      }
+      if (targetRows.some(row => row.status !== "WAIT_PAY")) {
+        showToast("只能取消“待付款”状态的记录");
+        return;
+      }
+      currentActionRows = targetRows;
+      updateSummary("cancelAmount", "cancelTax", "cancelPay", targetRows);
+      openModal("cancelModal");
+    }
+
+    function updateSummary(amountId, taxId, payId, targetRows) {
+      const amount = targetRows.reduce((sum, row) => sum + row.amount, 0);
+      const tax = targetRows.reduce((sum, row) => sum + row.tax, 0);
+      const pay = targetRows.reduce((sum, row) => sum + row.pay, 0);
+      document.getElementById(amountId).textContent = currency(amount);
+      document.getElementById(taxId).textContent = currency(tax);
+      document.getElementById(payId).textContent = currency(pay);
+    }
+
+    document.getElementById("tableBody").addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const row = rows.find(item => item.id === button.dataset.id);
+      if (button.dataset.action === "detail") showDetail(row);
+      if (button.dataset.action === "confirm") showConfirm([row]);
+      if (button.dataset.action === "pay") showPay([row]);
+      if (button.dataset.action === "retry") showPay([row]);
+      if (button.dataset.action === "cancel") showCancel([row]);
+    });
+
+    document.getElementById("checkAll").addEventListener("change", event => {
+      document.querySelectorAll(".row-check").forEach(input => {
+        input.checked = event.target.checked;
+      });
+    });
+
+    document.getElementById("batchConfirmBtn").addEventListener("click", () => {
+      showConfirm(selectedRows());
+    });
+
+    document.getElementById("batchPayBtn").addEventListener("click", () => {
+      const targets = selectedRows().filter(row => row.status === "WAIT_PAY");
+      showPay(targets);
+    });
+
+    document.getElementById("confirmSubmit").addEventListener("click", () => {
+      currentActionRows.forEach(row => {
+        row.status = "WAIT_PAY";
+        row.updateTime = "2026-06-18 14:30:00";
+      });
+      renderRows(rows);
+      closeModals();
+      showToast("确认成功，记录已进入待付款");
+    });
+
+    document.getElementById("paySubmit").addEventListener("click", () => {
+      currentActionRows.forEach(row => {
+        row.status = "PAYING";
+        row.failReason = "";
+        row.bankSerialNo = "BNK" + Date.now().toString().slice(-12);
+        row.updateTime = "2026-06-18 14:35:00";
+      });
+      renderRows(rows);
+      closeModals();
+      showToast("付款已提交银企直联");
+    });
+
+    document.getElementById("cancelSubmit").addEventListener("click", () => {
+      currentActionRows.forEach(row => {
+        row.status = "CANCELED";
+        row.failReason = "";
+        row.bankSerialNo = "";
+        row.updateTime = "2026-06-18 14:40:00";
+      });
+      renderRows(rows);
+      closeModals();
+      showToast("已取消付款，结算状态变为已取消");
+    });
+
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      showToast("已按筛选条件查询");
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("settlementMonth").value = "2026-05";
+      document.getElementById("personName").value = "";
+      document.getElementById("mobile").value = "";
+      document.getElementById("idCardNo").value = "";
+      document.getElementById("serviceProvider").value = "";
+      document.getElementById("settlementStatus").value = "";
+      document.getElementById("createTime").value = "";
+      showToast("筛选条件已重置");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      showToast("已触发导出当前筛选结果");
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", closeModals);
+    });
+
+    document.querySelectorAll(".modal-mask").forEach(mask => {
+      mask.addEventListener("click", event => {
+        if (event.target === mask) closeModals();
+      });
+    });
+
+    renderRows(rows);
+  </script>
+</body>
+</html>
