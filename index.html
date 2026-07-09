@@ -269,6 +269,31 @@
       gap: 10px;
     }
 
+    .status-tabs {
+      height: 50px;
+      margin: 0 18px;
+      display: flex;
+      align-items: flex-end;
+      gap: 34px;
+      border-bottom: 1px solid #e5e9f0;
+    }
+
+    .status-tab {
+      height: 36px;
+      padding: 0 0 10px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      color: #303133;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .status-tab.active {
+      color: #2586ee;
+      border-bottom-color: #2586ee;
+    }
+
     .table-setting {
       margin-left: auto;
       width: 36px;
@@ -513,6 +538,36 @@
       line-height: 1.7;
     }
 
+    .confirm-stats {
+      display: none;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .confirm-stats.show {
+      display: grid;
+    }
+
+    .stat-card {
+      padding: 12px;
+      background: #f7f9fc;
+      border: 1px solid #edf1f7;
+      border-radius: 4px;
+    }
+
+    .stat-label {
+      color: #7b8494;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      color: #303133;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
     .summary-box {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -537,6 +592,38 @@
       color: #303133;
       font-size: 16px;
       font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .form-item label {
+      display: block;
+      color: #7b8494;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .form-item label.required::before {
+      content: "*";
+      color: #f56c6c;
+      margin-right: 3px;
+    }
+
+    .form-item select,
+    .form-item input {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #d7dee9;
+      border-radius: 4px;
+      padding: 0 10px;
+      color: #515a6e;
+      background: #fff;
+      outline: none;
     }
 
     .toast {
@@ -584,6 +671,7 @@
           <div class="menu-title">用工管理</div>
           <a class="menu-item" href="#">需求发布</a>
           <a class="menu-item" href="#">交付审核</a>
+          <a class="menu-item" href="./template-config.html">成果模板配置</a>
           <a class="menu-item" href="#">招募与审核</a>
         </div>
 
@@ -676,6 +764,13 @@
           </div>
         </div>
 
+        <div class="status-tabs" id="statusTabs">
+          <button class="status-tab active" data-tab="pending">待结算 (<span id="pendingCount">0</span>)</button>
+          <button class="status-tab" data-tab="continuous">连续劳务汇算 (<span id="continuousCount">0</span>)</button>
+          <button class="status-tab" data-tab="settled">已结算 (<span id="settledCount">0</span>)</button>
+          <button class="status-tab" data-tab="canceled">已取消 (<span id="canceledCount">0</span>)</button>
+        </div>
+
         <div class="toolbar">
           <button class="btn primary" id="exportBtn">导出</button>
           <button class="btn primary" id="batchConfirmBtn">批量确认</button>
@@ -689,8 +784,6 @@
               <tr>
                 <th class="center" style="width: 46px;"><input type="checkbox" id="checkAll"></th>
                 <th class="center" style="width: 56px;">序号</th>
-                <th style="width: 180px;">操作</th>
-                <th style="width: 110px;">结算月份</th>
                 <th style="width: 100px;">人员姓名</th>
                 <th style="width: 130px;">手机号</th>
                 <th style="width: 180px;">证件号码</th>
@@ -715,7 +808,7 @@
         </div>
 
         <div class="pagination">
-          <span>共 6 条</span>
+          <span>共 <span id="totalCount">0</span> 条</span>
           <button class="page-btn">&lt;</button>
           <button class="page-btn active">1</button>
           <button class="page-btn">&gt;</button>
@@ -749,7 +842,17 @@
         <button class="modal-close" data-close>×</button>
       </div>
       <div class="modal-body">
-        <p class="confirm-text">确认后选中的结算记录将进入“待付款”状态，是否确认？</p>
+        <p class="confirm-text" id="confirmText">确认后选中的结算记录将进入“待付款”状态，是否确认？</p>
+        <div class="confirm-stats" id="confirmStats">
+          <div class="stat-card">
+            <div class="stat-label">本次已选择</div>
+            <div class="stat-value"><span id="confirmSelectedCount">0</span> 条</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">符合确认条件</div>
+            <div class="stat-value"><span id="confirmEligibleCount">0</span> 条</div>
+          </div>
+        </div>
         <div class="summary-box">
           <div class="summary-item">
             <div class="summary-label">待结算金额</div>
@@ -779,7 +882,17 @@
         <button class="modal-close" data-close>×</button>
       </div>
       <div class="modal-body">
-        <p class="confirm-text">发起付款后将直接调用银企直联进行付款，请确认付款信息。</p>
+        <p class="confirm-text" id="payText">发起付款后将记录线下支付信息，请确认付款信息。</p>
+        <div class="confirm-stats" id="payStats">
+          <div class="stat-card">
+            <div class="stat-label">本次已选择</div>
+            <div class="stat-value"><span id="paySelectedCount">0</span> 条</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">符合付款条件</div>
+            <div class="stat-value"><span id="payEligibleCount">0</span> 条</div>
+          </div>
+        </div>
         <div class="detail-grid">
           <div class="detail-item">
             <div class="detail-label">付款人数</div>
@@ -793,9 +906,17 @@
             <div class="detail-label">付款批次号</div>
             <div class="detail-value" id="payBatchNo">PAY202606180001</div>
           </div>
-          <div class="detail-item">
-            <div class="detail-label">银企通道</div>
-            <div class="detail-value">默认银企直联通道</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-item">
+            <label class="required">支付方式</label>
+            <select id="payMethodSelect">
+              <option value="线下支付">线下支付</option>
+            </select>
+          </div>
+          <div class="form-item">
+            <label class="required">支付完成时间</label>
+            <input id="paymentCompletedTime" type="datetime-local">
           </div>
         </div>
       </div>
@@ -836,10 +957,40 @@
     </div>
   </div>
 
+  <div class="modal-mask" id="cancelPayModal">
+    <div class="modal small">
+      <div class="modal-header">
+        取消支付
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">取消支付后，该记录将退回“待付款”状态，并清空本次线下支付信息，是否确认取消？</p>
+        <div class="summary-box">
+          <div class="summary-item">
+            <div class="summary-label">支付方式</div>
+            <div class="summary-value" id="cancelPayMethod">-</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">支付完成时间</div>
+            <div class="summary-value" id="cancelPaymentTime">-</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">实付金额</div>
+            <div class="summary-value" id="cancelPayAmount">¥0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>取消</button>
+        <button class="btn primary" id="cancelPaySubmit">确认取消</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
-    const rows = [
+    let rows = [
       {
         id: "S202605001",
         month: "2026-05",
@@ -917,7 +1068,8 @@
         bankName: "李明",
         bankNo: "6214 **** **** 0931",
         bank: "工商银行上海分行",
-        payMethod: "银企直联",
+        payMethod: "线下支付",
+        paymentCompletedTime: "2026-06-05 10:18:15",
         status: "PAYING",
         bankSerialNo: "BNK202606050088",
         failReason: "",
@@ -968,6 +1120,76 @@
       }
     ];
 
+    const pendingRows = rows;
+    const continuousRows = [
+      {
+        id: "CL202605001",
+        month: "2026-05",
+        name: "田国伟",
+        mobile: "180****6856",
+        idCard: "32058619910111****",
+        provider: "服务商管理1",
+        count: 12,
+        amount: 18400,
+        tax: 1680,
+        pay: 16720,
+        bankName: "田国伟",
+        bankNo: "6222 **** **** 1145",
+        bank: "招商银行苏州分行",
+        payMethod: "",
+        status: "WAIT_PAY",
+        bankSerialNo: "",
+        failReason: "",
+        createTime: "2026-06-22 15:45:32",
+        updateTime: "2026-06-22 15:45:32"
+      },
+      {
+        id: "CL202605002",
+        month: "2026-05",
+        name: "陶泓",
+        mobile: "139****0329",
+        idCard: "32052519891014****",
+        provider: "服务商管理1",
+        count: 9,
+        amount: 13530,
+        tax: 980,
+        pay: 12550,
+        bankName: "陶泓",
+        bankNo: "6228 **** **** 3015",
+        bank: "中国银行苏州支行",
+        payMethod: "",
+        status: "WAIT_PAY",
+        bankSerialNo: "",
+        failReason: "",
+        createTime: "2026-06-22 09:26:34",
+        updateTime: "2026-06-22 09:26:34"
+      },
+      {
+        id: "CL202605003",
+        month: "2026-05",
+        name: "施玉清",
+        mobile: "133****4970",
+        idCard: "32058619870121****",
+        provider: "华东连续劳务服务商",
+        count: 7,
+        amount: 9200,
+        tax: 600,
+        pay: 8600,
+        bankName: "施玉清",
+        bankNo: "6222 **** **** 7815",
+        bank: "招商银行南京分行",
+        payMethod: "线下支付",
+        paymentCompletedTime: "2026-06-22 16:10:00",
+        status: "PAYING",
+        bankSerialNo: "BNK202606220016",
+        failReason: "",
+        createTime: "2026-06-22 09:13:59",
+        updateTime: "2026-06-22 16:10:00"
+      }
+    ];
+
+    let activeStatusTab = "pending";
+
     const statusMap = {
       WAIT_CONFIRM: { text: "待确认", cls: "wait-confirm" },
       WAIT_PAY: { text: "待付款", cls: "wait-pay" },
@@ -986,17 +1208,18 @@
       });
     }
 
+    function formatDateTimeLocal(value) {
+      return value ? value.replace("T", " ") + ":00" : "";
+    }
+
     function renderRows(data) {
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = data.map((row, index) => {
         const status = statusMap[row.status];
-        const actions = getActions(row);
         return `
           <tr data-id="${row.id}">
             <td class="center"><input type="checkbox" class="row-check" value="${row.id}"></td>
             <td class="center">${index + 1}</td>
-            <td>${actions}</td>
-            <td>${row.month}</td>
             <td>${row.name}</td>
             <td>${row.mobile}</td>
             <td>${row.idCard}</td>
@@ -1017,6 +1240,32 @@
           </tr>
         `;
       }).join("");
+      document.getElementById("totalCount").textContent = data.length;
+      updateStatusTabCounts();
+    }
+
+    function updateStatusTabCounts() {
+      document.getElementById("pendingCount").textContent = pendingRows.length;
+      document.getElementById("continuousCount").textContent = continuousRows.length;
+      document.getElementById("settledCount").textContent = getRowsByStatusTab("settled").length;
+      document.getElementById("canceledCount").textContent = getRowsByStatusTab("canceled").length;
+    }
+
+    function getRowsByStatusTab(tabName) {
+      if (tabName === "continuous") return continuousRows;
+      if (tabName === "settled") return pendingRows.filter(row => row.status === "PAID" || row.status === "PAYING");
+      if (tabName === "canceled") return pendingRows.filter(row => row.status === "CANCELED");
+      return pendingRows;
+    }
+
+    function switchStatusTab(tabName) {
+      activeStatusTab = tabName;
+      rows = getRowsByStatusTab(tabName);
+      document.querySelectorAll(".status-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.tab === tabName);
+      });
+      document.getElementById("checkAll").checked = false;
+      renderRows(rows);
     }
 
     function getActions(row) {
@@ -1031,6 +1280,9 @@
       }
       if (row.status === "PAY_FAILED") {
         return base + `<button class="link" data-action="retry" data-id="${row.id}">重新付款</button>`;
+      }
+      if (row.status === "PAYING" && row.payMethod === "线下支付") {
+        return base + `<button class="link" data-action="cancelPay" data-id="${row.id}">取消支付</button>`;
       }
       return base;
     }
@@ -1085,6 +1337,7 @@
         ])}
         ${detailSection("状态信息", [
           ["失败原因", row.failReason || "-"],
+          ["支付完成时间", row.paymentCompletedTime || "-"],
           ["创建时间", row.createTime],
           ["更新时间", row.updateTime],
           ["结算记录ID", row.id]
@@ -1109,34 +1362,60 @@
       `;
     }
 
-    function showConfirm(targetRows) {
+    function showConfirm(targetRows, options = {}) {
+      const isBatch = options.isBatch === true;
       if (!targetRows.length) {
         showToast("请先选择待确认记录");
         return;
       }
-      if (targetRows.some(row => row.status !== "WAIT_CONFIRM")) {
+      const eligibleRows = targetRows.filter(row => row.status === "WAIT_CONFIRM");
+      if (!isBatch && eligibleRows.length !== targetRows.length) {
         showToast("只能确认“待确认”状态的记录");
         return;
       }
-      currentActionRows = targetRows;
-      updateSummary("confirmAmount", "confirmTax", "confirmPay", targetRows);
+      if (isBatch && !eligibleRows.length) {
+        showToast("所选记录中没有符合确认条件的数据");
+        return;
+      }
+      currentActionRows = eligibleRows;
+      document.getElementById("confirmText").textContent = isBatch
+        ? "本次批量确认将仅处理符合条件的“待确认”记录，是否确认操作？"
+        : "确认后选中的结算记录将进入“待付款”状态，是否确认？";
+      document.getElementById("confirmStats").classList.toggle("show", isBatch);
+      document.getElementById("confirmSelectedCount").textContent = targetRows.length;
+      document.getElementById("confirmEligibleCount").textContent = eligibleRows.length;
+      updateSummary("confirmAmount", "confirmTax", "confirmPay", eligibleRows);
       openModal("confirmModal");
     }
 
-    function showPay(targetRows) {
+    function showPay(targetRows, options = {}) {
+      const isBatch = options.isBatch === true;
       if (!targetRows.length) {
         showToast("请先选择待付款记录");
         return;
       }
-      if (targetRows.some(row => !["WAIT_PAY", "PAY_FAILED"].includes(row.status))) {
+      const eligibleRows = targetRows.filter(row => row.status === "WAIT_PAY");
+      if (!isBatch && !["WAIT_PAY", "PAY_FAILED"].includes(targetRows[0].status)) {
         showToast("只能对待付款或付款失败记录发起付款");
         return;
       }
-      currentActionRows = targetRows;
-      const total = targetRows.reduce((sum, row) => sum + row.pay, 0);
-      document.getElementById("payCount").textContent = targetRows.length + " 人";
+      if (isBatch && !eligibleRows.length) {
+        showToast("所选记录中没有符合付款条件的数据");
+        return;
+      }
+      currentActionRows = isBatch ? eligibleRows : targetRows;
+      const total = currentActionRows.reduce((sum, row) => sum + row.pay, 0);
+      document.getElementById("payText").textContent = isBatch
+        ? "本次批量发起付款将仅处理符合条件的“待付款”记录，请选择支付方式并填写支付完成时间。"
+        : "发起付款后将记录线下支付信息，请确认付款信息。";
+      document.getElementById("payStats").classList.toggle("show", isBatch);
+      document.getElementById("paySelectedCount").textContent = targetRows.length;
+      document.getElementById("payEligibleCount").textContent = eligibleRows.length;
+      document.getElementById("payCount").textContent = currentActionRows.length + " 人";
       document.getElementById("payTotal").textContent = currency(total);
       document.getElementById("payBatchNo").textContent = "PAY" + Date.now().toString().slice(-12);
+      document.getElementById("payMethodSelect").value = "线下支付";
+      document.getElementById("paymentCompletedTime").value = "";
       openModal("payModal");
     }
 
@@ -1152,6 +1431,18 @@
       currentActionRows = targetRows;
       updateSummary("cancelAmount", "cancelTax", "cancelPay", targetRows);
       openModal("cancelModal");
+    }
+
+    function showCancelPay(row) {
+      if (row.status !== "PAYING" || row.payMethod !== "线下支付") {
+        showToast("只能取消线下支付中的记录");
+        return;
+      }
+      currentActionRows = [row];
+      document.getElementById("cancelPayMethod").textContent = row.payMethod || "-";
+      document.getElementById("cancelPaymentTime").textContent = row.paymentCompletedTime || "-";
+      document.getElementById("cancelPayAmount").textContent = currency(row.pay);
+      openModal("cancelPayModal");
     }
 
     function updateSummary(amountId, taxId, payId, targetRows) {
@@ -1172,6 +1463,7 @@
       if (button.dataset.action === "pay") showPay([row]);
       if (button.dataset.action === "retry") showPay([row]);
       if (button.dataset.action === "cancel") showCancel([row]);
+      if (button.dataset.action === "cancelPay") showCancelPay(row);
     });
 
     document.getElementById("checkAll").addEventListener("change", event => {
@@ -1180,13 +1472,18 @@
       });
     });
 
+    document.getElementById("statusTabs").addEventListener("click", event => {
+      const tab = event.target.closest(".status-tab");
+      if (!tab || tab.dataset.tab === activeStatusTab) return;
+      switchStatusTab(tab.dataset.tab);
+    });
+
     document.getElementById("batchConfirmBtn").addEventListener("click", () => {
-      showConfirm(selectedRows());
+      showConfirm(selectedRows(), { isBatch: true });
     });
 
     document.getElementById("batchPayBtn").addEventListener("click", () => {
-      const targets = selectedRows().filter(row => row.status === "WAIT_PAY");
-      showPay(targets);
+      showPay(selectedRows(), { isBatch: true });
     });
 
     document.getElementById("confirmSubmit").addEventListener("click", () => {
@@ -1200,15 +1497,27 @@
     });
 
     document.getElementById("paySubmit").addEventListener("click", () => {
+      const payMethod = document.getElementById("payMethodSelect").value;
+      const paymentCompletedTime = document.getElementById("paymentCompletedTime").value;
+      if (!payMethod) {
+        showToast("请选择支付方式");
+        return;
+      }
+      if (!paymentCompletedTime) {
+        showToast("请选择支付完成时间");
+        return;
+      }
       currentActionRows.forEach(row => {
         row.status = "PAYING";
+        row.payMethod = payMethod;
+        row.paymentCompletedTime = formatDateTimeLocal(paymentCompletedTime);
         row.failReason = "";
         row.bankSerialNo = "BNK" + Date.now().toString().slice(-12);
-        row.updateTime = "2026-06-18 14:35:00";
+        row.updateTime = row.paymentCompletedTime;
       });
       renderRows(rows);
       closeModals();
-      showToast("付款已提交银企直联");
+      showToast("线下付款信息已记录");
     });
 
     document.getElementById("cancelSubmit").addEventListener("click", () => {
@@ -1221,6 +1530,20 @@
       renderRows(rows);
       closeModals();
       showToast("已取消付款，结算状态变为已取消");
+    });
+
+    document.getElementById("cancelPaySubmit").addEventListener("click", () => {
+      currentActionRows.forEach(row => {
+        row.status = "WAIT_PAY";
+        row.payMethod = "";
+        row.paymentCompletedTime = "";
+        row.failReason = "";
+        row.bankSerialNo = "";
+        row.updateTime = "2026-06-18 14:45:00";
+      });
+      renderRows(rows);
+      closeModals();
+      showToast("已取消支付，结算状态变为待付款");
     });
 
     document.getElementById("searchBtn").addEventListener("click", () => {
@@ -1252,7 +1575,7 @@
       });
     });
 
-    renderRows(rows);
+    switchStatusTab("pending");
   </script>
 </body>
 </html>

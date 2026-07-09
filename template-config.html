@@ -1,0 +1,1488 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成果模板配置 - 连续劳务平台</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #515a6e;
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      background: #f7f9fc;
+    }
+
+    .sidebar {
+      width: 200px;
+      flex: 0 0 200px;
+      background: #fff;
+      border-right: 1px solid #e8edf5;
+      box-shadow: 2px 0 8px rgba(17, 31, 44, .05);
+      z-index: 2;
+    }
+
+    .brand {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 10px;
+      border-bottom: 1px solid #f2f4f8;
+    }
+
+    .brand-mark {
+      font-size: 26px;
+      line-height: 1;
+      color: #ff9800;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand-name {
+      color: #202938;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu {
+      padding: 14px 0;
+    }
+
+    .menu-group {
+      margin-bottom: 6px;
+    }
+
+    .menu-title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px 0 36px;
+      color: #4d4f53;
+      position: relative;
+    }
+
+    .menu-title::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border: 2px solid #606266;
+      border-radius: 50%;
+      position: absolute;
+      left: 13px;
+    }
+
+    .menu-title::after {
+      content: "^";
+      margin-left: auto;
+      color: #8a8f99;
+      font-size: 12px;
+    }
+
+    .menu-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding-left: 38px;
+      color: #606266;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .menu-item.active {
+      color: #2f8cf0;
+      background: #f7fbff;
+      font-weight: 500;
+      border-right: 3px solid #2f8cf0;
+    }
+
+    .main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 52px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .tabs {
+      display: flex;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .tab {
+      min-width: 112px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #f1f3f7;
+      color: #303133;
+      background: #fff;
+    }
+
+    .tab.active {
+      color: #2f8cf0;
+      background: #f7fbff;
+    }
+
+    .tab-close {
+      margin-left: 8px;
+      color: #9aa4b2;
+    }
+
+    .top-actions {
+      margin-left: auto;
+      padding-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #2586ee;
+      font-size: 13px;
+    }
+
+    .full-screen {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #2586ee;
+      border-radius: 3px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2f8cf0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .content {
+      flex: 1;
+      margin: 10px 10px 0 18px;
+      background: #fff;
+      border-left: 1px solid #edf1f7;
+      border-right: 1px solid #edf1f7;
+      overflow: hidden;
+    }
+
+    .filter {
+      padding: 16px 18px;
+      border-bottom: 1px solid #dde5ef;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+      gap: 12px 20px;
+      align-items: end;
+    }
+
+    .field label,
+    .form-item label {
+      display: block;
+      color: #7b8494;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .field input,
+    .field select,
+    .form-item input,
+    .form-item select,
+    .form-item textarea {
+      width: 100%;
+      min-height: 32px;
+      border: 1px solid #d7dee9;
+      border-radius: 4px;
+      padding: 0 10px;
+      color: #515a6e;
+      background: #fff;
+      outline: none;
+    }
+
+    .form-item textarea {
+      height: 70px;
+      padding: 8px 10px;
+      resize: vertical;
+    }
+
+    .field input::placeholder,
+    .form-item input::placeholder,
+    .form-item textarea::placeholder {
+      color: #b6beca;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .form-item input:focus,
+    .form-item select:focus,
+    .form-item textarea:focus {
+      border-color: #2f8cf0;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      height: 32px;
+      min-width: 58px;
+      padding: 0 16px;
+      border-radius: 4px;
+      border: 1px solid #d7dee9;
+      background: #fff;
+      color: #515a6e;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: #2f8cf0;
+      background: #2f8cf0;
+    }
+
+    .btn.warning {
+      color: #d46b08;
+      border-color: #ffd591;
+      background: #fff7e6;
+    }
+
+    .toolbar {
+      height: 54px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar-note {
+      margin-left: auto;
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .table-wrap {
+      margin: 0 18px;
+      border: 1px solid #e5e9f0;
+      overflow: auto;
+      height: calc(100vh - 230px);
+      min-height: 420px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 1540px;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      height: 38px;
+      padding: 0 10px;
+      border-right: 1px solid #e9edf3;
+      border-bottom: 1px solid #e9edf3;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      color: #4e5969;
+      background: #f6f8fb;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(1) {
+      background: #edf6ff;
+    }
+
+    tbody tr:hover {
+      background: #f5faff;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .link {
+      color: #2586ee;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      margin-right: 9px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .tag.enabled {
+      color: #389e0d;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+
+    .tag.draft {
+      color: #d46b08;
+      background: #fff7e6;
+      border: 1px solid #ffd591;
+    }
+
+    .tag.disabled {
+      color: #606266;
+      background: #f4f4f5;
+      border: 1px solid #dcdfe6;
+    }
+
+    .tag.version {
+      color: #1677ff;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+    }
+
+    .pagination {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 0 18px;
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .page-btn {
+      min-width: 30px;
+      height: 28px;
+      border: 1px solid #d7dee9;
+      background: #fff;
+      color: #606266;
+      border-radius: 4px;
+    }
+
+    .page-btn.active {
+      color: #fff;
+      background: #2f8cf0;
+      border-color: #2f8cf0;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .35);
+      z-index: 20;
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 880px;
+      max-width: calc(100vw - 40px);
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+    }
+
+    .modal.large {
+      width: 1080px;
+    }
+
+    .modal-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid #edf1f7;
+      color: #303133;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      margin-left: auto;
+      border: 0;
+      background: transparent;
+      color: #9098a6;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      padding: 18px 20px 8px;
+      max-height: 72vh;
+      overflow: auto;
+    }
+
+    .modal-footer {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 0 20px;
+      border-top: 1px solid #edf1f7;
+    }
+
+    .detail-section {
+      margin-bottom: 18px;
+    }
+
+    .detail-title {
+      color: #303133;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding-left: 8px;
+      border-left: 3px solid #2f8cf0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .form-item.wide {
+      grid-column: span 3;
+    }
+
+    .required::before {
+      content: "*";
+      color: #f56c6c;
+      margin-right: 3px;
+    }
+
+    .required-star {
+      color: #f56c6c;
+      margin-right: 3px;
+      font-weight: 700;
+    }
+
+    .field-label-required::before {
+      content: "*";
+      color: #f56c6c;
+      margin-right: 4px;
+      font-weight: 700;
+    }
+
+    .field-table {
+      width: 100%;
+      min-width: 1040px;
+    }
+
+    .field-table input,
+    .field-table select {
+      width: 100%;
+      height: 30px;
+      border: 1px solid #d7dee9;
+      border-radius: 4px;
+      padding: 0 8px;
+      color: #515a6e;
+      background: #fff;
+      outline: none;
+    }
+
+    .field-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .field-help {
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .category-cascade {
+      position: relative;
+      width: 100%;
+    }
+
+    .category-trigger {
+      width: 100%;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 10px;
+      border: 1px solid #d7dee9;
+      border-radius: 4px;
+      color: #515a6e;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .category-trigger.open {
+      border-color: #2f8cf0;
+      box-shadow: 0 0 0 2px rgba(47, 140, 240, .08);
+    }
+
+    .category-trigger-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .category-trigger-arrow {
+      color: #8a8f99;
+      font-size: 13px;
+    }
+
+    .category-panel {
+      position: absolute;
+      top: 38px;
+      left: 0;
+      z-index: 40;
+      display: none;
+      width: 560px;
+      max-width: min(560px, calc(100vw - 80px));
+      height: 238px;
+      border: 1px solid #dfe6f0;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(17, 31, 44, .12);
+      overflow: hidden;
+    }
+
+    .category-panel.show {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+    }
+
+    .category-parents {
+      padding: 8px 0;
+      border-right: 1px solid #e5e9f0;
+      background: #fbfcfe;
+      overflow: auto;
+    }
+
+    .category-parent-option {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 0 12px 0 28px;
+      color: #515a6e;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .category-parent-option input {
+      width: auto;
+      min-height: auto;
+      margin: 0;
+    }
+
+    .category-parent-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .category-parent-option.active {
+      color: #2f8cf0;
+      background: #f0f7ff;
+      font-weight: 600;
+    }
+
+    .category-parent-option::after {
+      content: ">";
+      color: #8a8f99;
+    }
+
+    .category-parent-option.active::after {
+      color: #2f8cf0;
+    }
+
+    .category-children {
+      padding: 8px 0;
+      overflow: auto;
+    }
+
+    .checkbox-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      width: 100%;
+      min-height: 26px;
+      padding: 0 14px;
+      color: #515a6e;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .checkbox-option input {
+      width: auto;
+      min-height: auto;
+      margin: 0;
+    }
+
+    .preview-shell {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+    }
+
+    .preview-card,
+    .audit-card {
+      border: 1px solid #e5e9f0;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .preview-card {
+      padding: 16px;
+      background: #fbfcfe;
+    }
+
+    .audit-card {
+      padding: 14px;
+    }
+
+    .phone-title {
+      color: #303133;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .phone-tip {
+      margin-bottom: 12px;
+      color: #7b8494;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .submit-field {
+      margin-bottom: 12px;
+    }
+
+    .submit-field label {
+      display: block;
+      color: #303133;
+      font-size: 12px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .fake-input,
+    .fake-upload {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px dashed #cfd8e6;
+      border-radius: 4px;
+      color: #a0a8b5;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .audit-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      min-height: 34px;
+      border-top: 1px solid #edf1f7;
+    }
+
+    .audit-row:first-child {
+      border-top: 0;
+    }
+
+    .audit-label {
+      padding: 9px 10px;
+      color: #7b8494;
+      background: #f8fafc;
+    }
+
+    .audit-value {
+      padding: 9px 10px;
+      color: #303133;
+    }
+
+    .toast {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      min-width: 260px;
+      padding: 10px 16px;
+      color: #1677ff;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+      border-radius: 4px;
+      text-align: center;
+      z-index: 30;
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 1100px) {
+      .sidebar {
+        width: 168px;
+        flex-basis: 168px;
+      }
+
+      .filter-grid,
+      .form-grid,
+      .preview-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .form-item.wide {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">悠客</div>
+        <div class="brand-name">智工快达</div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-group">
+          <div class="menu-title">用工管理</div>
+          <a class="menu-item" href="#">需求发布</a>
+          <a class="menu-item" href="#">交付审核</a>
+          <a class="menu-item active" href="./template-config.html">成果模板配置</a>
+          <a class="menu-item" href="#">招募与审核</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">财务结算</div>
+          <a class="menu-item" href="#">人员结算</a>
+          <a class="menu-item" href="./index.html">月度待结算</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">人员管理</div>
+          <a class="menu-item" href="#">人员管理</a>
+          <a class="menu-item" href="#">个人协议</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">服务商管理</div>
+          <a class="menu-item" href="#">个人平台协议</a>
+          <a class="menu-item" href="#">客户管理</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">账号管理</div>
+          <a class="menu-item" href="#">角色管理</a>
+          <a class="menu-item" href="#">账号管理</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="tabs">
+          <div class="tab">需求发布</div>
+          <div class="tab active">成果模板配置 <span class="tab-close">x</span></div>
+        </div>
+        <div class="top-actions">
+          <span>连续劳务计算器</span>
+          <span class="full-screen" aria-hidden="true"></span>
+          <span class="avatar">provider</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="filter">
+          <div class="filter-grid">
+            <div class="field">
+              <label>模板名称</label>
+              <input id="templateName" placeholder="请输入模板名称">
+            </div>
+            <div class="field">
+              <label>适用岗位分类</label>
+              <select id="categoryFilter">
+                <option value="">请选择岗位分类</option>
+                <option>生活服务-保洁服务</option>
+                <option>生活服务-家政保洁</option>
+                <option>配送物流-配送服务</option>
+                <option>配送物流-同城跑腿</option>
+                <option>推广营销-地推推广</option>
+                <option>推广营销-问卷调研</option>
+                <option>创意设计-设计任务</option>
+                <option>直播运营-直播助播</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>模板状态</label>
+              <select id="statusFilter">
+                <option value="">全部</option>
+                <option value="ENABLED">启用</option>
+                <option value="DRAFT">草稿</option>
+                <option value="DISABLED">停用</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>创建人</label>
+              <input id="creatorFilter" placeholder="请输入创建人">
+            </div>
+            <div class="field">
+              <label>更新时间</label>
+              <input id="updateTimeFilter" placeholder="2026-07-01 ~ 2026-07-31">
+            </div>
+            <div class="filter-actions">
+              <button class="btn primary" id="searchBtn">搜索</button>
+              <button class="btn" id="resetBtn">重置</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn primary" id="createBtn">新增模板</button>
+          <button class="btn" id="copyBtn">复制模板</button>
+          <button class="btn warning" id="disableBtn">停用</button>
+          <span class="toolbar-note">已启用模板变更时自动生成新版本，历史任务继续使用原版本。</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="center" style="width: 46px;"><input type="checkbox" id="checkAll"></th>
+                <th class="center" style="width: 56px;">序号</th>
+                <th style="width: 130px;">模板编号</th>
+                <th style="width: 180px;">模板名称</th>
+                <th style="width: 170px;">适用岗位分类</th>
+                <th class="center" style="width: 90px;">字段数量</th>
+                <th style="width: 90px;">状态</th>
+                <th style="width: 90px;">当前版本</th>
+                <th style="width: 120px;">创建人</th>
+                <th style="width: 170px;">更新时间</th>
+                <th style="width: 260px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <span>共 <span id="totalCount">0</span> 条</span>
+          <button class="page-btn">&lt;</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">&gt;</button>
+          <select class="page-btn" style="width: 78px;">
+            <option>10条/页</option>
+            <option>20条/页</option>
+            <option>50条/页</option>
+          </select>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-mask" id="editModal">
+    <div class="modal large">
+      <div class="modal-header">
+        新增模板
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-section">
+          <div class="detail-title">基础信息</div>
+          <div class="form-grid">
+            <div class="form-item">
+              <label class="required">模板名称</label>
+              <input id="editTemplateName" value="保洁服务成果模板">
+            </div>
+            <div class="form-item wide">
+              <label class="required">适用岗位分类</label>
+              <div class="category-cascade" id="categoryCascade">
+                <button class="category-trigger" id="categoryTrigger" type="button">
+                  <span class="category-trigger-text" id="categoryTriggerText">请选择适用岗位分类</span>
+                  <span class="category-trigger-arrow">⌄</span>
+                </button>
+                <div class="category-panel" id="categoryPanel">
+                  <div class="category-parents" id="categoryParents"></div>
+                  <div class="category-children" id="categoryChildren"></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-item">
+              <label class="required">模板状态</label>
+              <select id="editStatus">
+                <option value="DRAFT">草稿</option>
+                <option value="ENABLED">启用</option>
+              </select>
+            </div>
+            <div class="form-item wide">
+              <label>个人端提示语</label>
+              <textarea id="editTip">请按要求上传清晰的工作成果材料，图片需能体现任务完成情况。</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-title">字段配置</div>
+          <div class="field-toolbar">
+            <button class="btn primary" id="addFieldBtn">新增字段</button>
+            <span class="field-help">字段名称、类型、是否必填、填写说明均可自定义配置；必填字段会在个人端以红色星号标记。</span>
+          </div>
+          <table class="field-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">排序</th>
+                <th style="width: 150px;"><span class="required-star">*</span>字段名称</th>
+                <th style="width: 110px;"><span class="required-star">*</span>字段类型</th>
+                <th style="width: 80px;"><span class="required-star">*</span>必填</th>
+                <th style="width: 310px;">填写说明</th>
+                <th style="width: 80px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="fieldConfigBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>取消</button>
+        <button class="btn">保存草稿</button>
+        <button class="btn primary" id="saveBtn">保存并启用</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="previewModal">
+    <div class="modal large">
+      <div class="modal-header">
+        模板预览
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-shell">
+          <div class="preview-card">
+            <div class="phone-title" id="previewTitle">保洁服务成果模板</div>
+            <div class="phone-tip">请按要求上传清晰的工作成果材料，图片需能体现任务完成情况。</div>
+            <div id="previewFields"></div>
+            <button class="btn primary" style="width: 100%; margin-top: 4px;">提交成果</button>
+          </div>
+
+          <div class="audit-card">
+            <div class="detail-title">审核端展示</div>
+            <div class="audit-row">
+              <div class="audit-label">适用岗位分类</div>
+              <div class="audit-value" id="auditCategory">保洁服务</div>
+            </div>
+            <div class="audit-row">
+              <div class="audit-label">模板版本</div>
+              <div class="audit-value" id="auditVersion">V3</div>
+            </div>
+            <div class="audit-row">
+              <div class="audit-label">审核规则</div>
+              <div class="audit-value">重点查看必填字段是否完整，驳回时必须填写原因。</div>
+            </div>
+            <div class="audit-row">
+              <div class="audit-label">历史处理</div>
+              <div class="audit-value">岗位发布后锁定当前模板版本，后续模板调整不影响已发布任务。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const categoryTree = [
+      { parent: "生活服务", children: ["保洁服务", "家政保洁"] },
+      { parent: "配送物流", children: ["配送服务", "同城跑腿"] },
+      { parent: "推广营销", children: ["地推推广", "问卷调研"] },
+      { parent: "创意设计", children: ["设计任务"] },
+      { parent: "直播运营", children: ["直播助播"] }
+    ];
+    const categoryOptions = categoryTree.flatMap(group => group.children.map(child => `${group.parent}-${child}`));
+    const fieldTypes = ["单行文本", "多行文本", "图片上传", "文件上传", "视频上传", "链接", "数字", "日期时间", "定位", "单选", "多选"];
+
+    const templates = [
+      {
+        id: "TPL202607001",
+        name: "保洁服务成果模板",
+        categories: ["生活服务-保洁服务", "生活服务-家政保洁"],
+        status: "ENABLED",
+        version: "V3",
+        creator: "平台运营",
+        updateTime: "2026-07-08 14:20:16",
+        tip: "请按要求上传清晰的工作成果材料，图片需能体现任务完成情况。",
+        fields: [
+          { name: "服务前照片", type: "图片上传", required: true, rule: "最多 3 张，jpg/png", help: "需体现作业前现场状态", audit: "照片清晰、地点匹配" },
+          { name: "服务后照片", type: "图片上传", required: true, rule: "最多 3 张，jpg/png", help: "需体现作业完成效果", audit: "与服务前照片形成对比" },
+          { name: "服务地点", type: "定位", required: true, rule: "必须获取 GPS", help: "提交时授权获取定位", audit: "定位应在任务服务范围内" },
+          { name: "完成说明", type: "多行文本", required: true, rule: "300 字以内", help: "简要描述完成内容", audit: "说明与图片材料一致" }
+        ]
+      },
+      {
+        id: "TPL202607002",
+        name: "配送服务成果模板",
+        categories: ["配送物流-配送服务", "配送物流-同城跑腿"],
+        status: "ENABLED",
+        version: "V2",
+        creator: "业务管理员",
+        updateTime: "2026-07-07 09:45:33",
+        tip: "请上传签收凭证并填写配送单号，异常情况需补充说明。",
+        fields: [
+          { name: "配送单号", type: "单行文本", required: true, rule: "50 字以内", help: "填写平台或客户提供的配送单号", audit: "单号与任务订单一致" },
+          { name: "签收照片", type: "图片上传", required: true, rule: "最多 2 张，jpg/png", help: "上传签收或交付凭证", audit: "照片清晰可识别" },
+          { name: "签收时间", type: "日期时间", required: true, rule: "不可晚于当前时间", help: "选择实际签收时间", audit: "时间应在任务有效期内" },
+          { name: "异常说明", type: "多行文本", required: false, rule: "500 字以内", help: "如有异常请说明", audit: "异常原因描述完整" }
+        ]
+      },
+      {
+        id: "TPL202607003",
+        name: "地推推广成果模板",
+        categories: ["推广营销-地推推广", "推广营销-问卷调研"],
+        status: "DRAFT",
+        version: "V1",
+        creator: "平台运营",
+        updateTime: "2026-07-06 18:02:11",
+        tip: "请提交推广现场材料和有效推广数据，客户名单可按需上传。",
+        fields: [
+          { name: "推广地点", type: "定位", required: true, rule: "必须获取 GPS", help: "提交时授权定位", audit: "定位与推广城市一致" },
+          { name: "现场照片", type: "图片上传", required: true, rule: "最多 5 张，jpg/png", help: "上传活动现场照片", audit: "照片需体现真实推广场景" },
+          { name: "推广人数", type: "数字", required: true, rule: "大于 0", help: "填写有效推广人数", audit: "数量应与客户名单匹配" },
+          { name: "客户名单", type: "文件上传", required: false, rule: "xlsx/csv", help: "上传有效客户名单", audit: "文件格式正确，可打开" },
+          { name: "工作总结", type: "多行文本", required: true, rule: "500 字以内", help: "填写推广总结", audit: "总结内容与推广目标一致" }
+        ]
+      },
+      {
+        id: "TPL202607004",
+        name: "设计任务成果模板",
+        categories: ["创意设计-设计任务"],
+        status: "DISABLED",
+        version: "V1",
+        creator: "业务管理员",
+        updateTime: "2026-07-03 11:27:49",
+        tip: "请上传设计源文件、预览图，作品链接可作为补充材料。",
+        fields: [
+          { name: "设计源文件", type: "文件上传", required: true, rule: "psd/ai/sketch", help: "上传可编辑源文件", audit: "文件可正常打开" },
+          { name: "预览图", type: "图片上传", required: true, rule: "最多 6 张，jpg/png", help: "上传设计预览图", audit: "预览图与源文件一致" },
+          { name: "作品链接", type: "链接", required: false, rule: "URL 格式", help: "填写在线作品链接", audit: "链接可访问" },
+          { name: "修改说明", type: "多行文本", required: false, rule: "500 字以内", help: "说明本次修改内容", audit: "修改说明清楚" }
+        ]
+      }
+    ];
+
+    const statusMap = {
+      ENABLED: { text: "启用", cls: "enabled" },
+      DRAFT: { text: "草稿", cls: "draft" },
+      DISABLED: { text: "停用", cls: "disabled" }
+    };
+
+    let currentRows = templates.slice();
+    let editingTemplate = null;
+    let editingFields = [];
+    let selectedCategories = [];
+    let activeCategoryParent = categoryTree[0].parent;
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function renderRows(data) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = data.map((row, index) => {
+        const status = statusMap[row.status];
+        const categoryText = row.categories.join("、");
+        return `
+          <tr data-id="${row.id}">
+            <td class="center"><input type="checkbox" class="row-check" value="${row.id}"></td>
+            <td class="center">${index + 1}</td>
+            <td>${row.id}</td>
+            <td>${row.name}</td>
+            <td title="${escapeHtml(categoryText)}">${escapeHtml(categoryText)}</td>
+            <td class="center">${row.fields.length}</td>
+            <td><span class="tag ${status.cls}">${status.text}</span></td>
+            <td><span class="tag version">${row.version}</span></td>
+            <td>${row.creator}</td>
+            <td>${row.updateTime}</td>
+            <td>
+              <button class="link" data-action="preview" data-id="${row.id}">预览</button>
+              <button class="link" data-action="edit" data-id="${row.id}">编辑</button>
+              <button class="link" data-action="copy" data-id="${row.id}">复制</button>
+              <button class="link" data-action="toggle" data-id="${row.id}">${row.status === "DISABLED" ? "启用" : "停用"}</button>
+              <button class="link" data-action="version" data-id="${row.id}">版本记录</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      document.getElementById("totalCount").textContent = data.length;
+    }
+
+    function selectedRows() {
+      const ids = Array.from(document.querySelectorAll(".row-check:checked")).map(input => input.value);
+      return currentRows.filter(row => ids.includes(row.id));
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("show");
+    }
+
+    function closeModals() {
+      document.querySelectorAll(".modal-mask").forEach(modal => modal.classList.remove("show"));
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function showPreview(row) {
+      document.getElementById("previewTitle").textContent = row.name;
+      document.querySelector(".phone-tip").textContent = row.tip;
+      document.getElementById("auditCategory").textContent = row.categories.join("、");
+      document.getElementById("auditVersion").textContent = row.version;
+      document.getElementById("previewFields").innerHTML = row.fields.map(field => `
+        <div class="submit-field">
+          <label class="${field.required ? "field-label-required" : ""}">${escapeHtml(field.name)}</label>
+          <div class="${field.type.includes("上传") ? "fake-upload" : "fake-input"}">${escapeHtml(field.type)}｜${field.required ? "必填" : "非必填"}｜${escapeHtml(field.help || "请按要求填写")}</div>
+        </div>
+      `).join("");
+      openModal("previewModal");
+    }
+
+    function renderCategoryCascade() {
+      const activeGroup = categoryTree.find(group => group.parent === activeCategoryParent) || categoryTree[0];
+      const triggerText = selectedCategories.length
+        ? selectedCategories.join(" / ")
+        : "请选择适用岗位分类";
+      document.getElementById("categoryTriggerText").textContent = triggerText;
+      document.getElementById("categoryParents").innerHTML = categoryTree.map(group => {
+        const childrenValues = getParentChildrenValues(group.parent);
+        const checkedCount = childrenValues.filter(value => selectedCategories.includes(value)).length;
+        return `
+        <div class="category-parent-option ${group.parent === activeGroup.parent ? "active" : ""}" data-parent="${escapeHtml(group.parent)}">
+          <input type="checkbox" data-field="parent-check" value="${escapeHtml(group.parent)}" ${checkedCount === childrenValues.length ? "checked" : ""} ${checkedCount > 0 && checkedCount < childrenValues.length ? "data-indeterminate=\"true\"" : ""}>
+          <span class="category-parent-name">${escapeHtml(group.parent)}</span>
+        </div>
+        `;
+      }).join("");
+      document.querySelectorAll('#categoryParents input[data-field="parent-check"]').forEach(input => {
+        input.indeterminate = input.dataset.indeterminate === "true";
+      });
+      document.getElementById("categoryChildren").innerHTML = activeGroup.children.map(child => {
+        const value = `${activeGroup.parent}-${child}`;
+        return `
+          <label class="checkbox-option">
+            <input type="checkbox" value="${escapeHtml(value)}" ${selectedCategories.includes(value) ? "checked" : ""}>
+            ${escapeHtml(child)}
+          </label>
+        `;
+      }).join("");
+    }
+
+    function setCategoryPanelOpen(isOpen) {
+      document.getElementById("categoryPanel").classList.toggle("show", isOpen);
+      document.getElementById("categoryTrigger").classList.toggle("open", isOpen);
+    }
+
+    function readFieldConfigRows() {
+      editingFields = Array.from(document.querySelectorAll("#fieldConfigBody tr")).map(row => ({
+        name: row.querySelector('[data-field="name"]').value.trim(),
+        type: row.querySelector('[data-field="type"]').value,
+        required: row.querySelector('[data-field="required"]').value === "true",
+        help: row.querySelector('[data-field="help"]').value.trim()
+      }));
+    }
+
+    function renderFieldConfigRows() {
+      document.getElementById("fieldConfigBody").innerHTML = editingFields.map((field, index) => `
+        <tr>
+          <td class="center">${index + 1}</td>
+          <td><input data-field="name" class="${field.required ? "field-label-required" : ""}" value="${escapeHtml(field.name)}" placeholder="如：服务后照片"></td>
+          <td>
+            <select data-field="type">
+              ${fieldTypes.map(type => `<option value="${escapeHtml(type)}" ${field.type === type ? "selected" : ""}>${escapeHtml(type)}</option>`).join("")}
+            </select>
+          </td>
+          <td>
+            <select data-field="required">
+              <option value="true" ${field.required ? "selected" : ""}>是</option>
+              <option value="false" ${!field.required ? "selected" : ""}>否</option>
+            </select>
+          </td>
+          <td><input data-field="help" value="${escapeHtml(field.help)}" placeholder="给个人看的说明"></td>
+          <td><button class="link" data-action="delete-field" data-index="${index}">删除</button></td>
+        </tr>
+      `).join("");
+    }
+
+    function getParentChildrenValues(parent) {
+      const group = categoryTree.find(item => item.parent === parent);
+      return group ? group.children.map(child => `${group.parent}-${child}`) : [];
+    }
+
+    function toggleParentCategory(parent, isChecked) {
+      const values = getParentChildrenValues(parent);
+      if (isChecked) {
+        values.forEach(value => {
+          if (!selectedCategories.includes(value)) selectedCategories.push(value);
+        });
+      } else {
+        selectedCategories = selectedCategories.filter(value => !values.includes(value));
+      }
+    }
+
+    function openEditModal(row) {
+      editingTemplate = row || null;
+      const source = row || {
+        name: "",
+        categories: ["生活服务-保洁服务"],
+        status: "DRAFT",
+        tip: "请按要求上传工作成果材料。",
+        fields: [
+          { name: "成果说明", type: "多行文本", required: true, help: "描述任务完成情况" }
+        ]
+      };
+      document.querySelector("#editModal .modal-header").childNodes[0].nodeValue = row ? "编辑模板" : "新增模板";
+      document.getElementById("editTemplateName").value = source.name;
+      document.getElementById("editStatus").value = source.status;
+      document.getElementById("editTip").value = source.tip;
+      selectedCategories = source.categories.slice();
+      activeCategoryParent = selectedCategories[0]?.split("-")[0] || categoryTree[0].parent;
+      renderCategoryCascade();
+      setCategoryPanelOpen(false);
+      editingFields = source.fields.map(field => ({ ...field }));
+      renderFieldConfigRows();
+      openModal("editModal");
+    }
+
+    function applyFilters() {
+      const name = document.getElementById("templateName").value.trim();
+      const category = document.getElementById("categoryFilter").value;
+      const status = document.getElementById("statusFilter").value;
+      const creator = document.getElementById("creatorFilter").value.trim();
+      currentRows = templates.filter(row => {
+        return (!name || row.name.includes(name))
+          && (!category || row.categories.includes(category))
+          && (!status || row.status === status)
+          && (!creator || row.creator.includes(creator));
+      });
+      renderRows(currentRows);
+      showToast("已按筛选条件查询");
+    }
+
+    document.getElementById("tableBody").addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const row = templates.find(item => item.id === button.dataset.id);
+      if (button.dataset.action === "preview") showPreview(row);
+      if (button.dataset.action === "edit") openEditModal(row);
+      if (button.dataset.action === "copy") showToast("已复制模板，可在副本上调整字段");
+      if (button.dataset.action === "toggle") showToast(row.status === "DISABLED" ? "模板已启用" : "模板已停用，新岗位不可引用");
+      if (button.dataset.action === "version") {
+        window.location.href = `./template-version-record.html?templateId=${encodeURIComponent(row.id)}`;
+      }
+    });
+
+    document.getElementById("checkAll").addEventListener("change", event => {
+      document.querySelectorAll(".row-check").forEach(input => {
+        input.checked = event.target.checked;
+      });
+    });
+
+    document.getElementById("categoryTrigger").addEventListener("click", event => {
+      event.stopPropagation();
+      const panel = document.getElementById("categoryPanel");
+      setCategoryPanelOpen(!panel.classList.contains("show"));
+    });
+
+    document.getElementById("categoryParents").addEventListener("click", event => {
+      if (event.target.closest('input[data-field="parent-check"]')) return;
+      const option = event.target.closest(".category-parent-option");
+      if (!option) return;
+      activeCategoryParent = option.dataset.parent;
+      renderCategoryCascade();
+      setCategoryPanelOpen(true);
+    });
+
+    document.getElementById("categoryParents").addEventListener("change", event => {
+      const checkbox = event.target.closest('input[data-field="parent-check"]');
+      if (!checkbox) return;
+      toggleParentCategory(checkbox.value, checkbox.checked);
+      activeCategoryParent = checkbox.value;
+      renderCategoryCascade();
+      setCategoryPanelOpen(true);
+    });
+
+    document.getElementById("categoryChildren").addEventListener("change", event => {
+      const checkbox = event.target.closest('input[type="checkbox"]');
+      if (!checkbox) return;
+      if (checkbox.checked && !selectedCategories.includes(checkbox.value)) {
+        selectedCategories.push(checkbox.value);
+      }
+      if (!checkbox.checked) {
+        selectedCategories = selectedCategories.filter(value => value !== checkbox.value);
+      }
+      renderCategoryCascade();
+      setCategoryPanelOpen(true);
+    });
+
+    document.getElementById("fieldConfigBody").addEventListener("click", event => {
+      const button = event.target.closest('button[data-action="delete-field"]');
+      if (!button) return;
+      readFieldConfigRows();
+      editingFields.splice(Number(button.dataset.index), 1);
+      renderFieldConfigRows();
+      showToast("字段已删除");
+    });
+
+    document.getElementById("addFieldBtn").addEventListener("click", () => {
+      readFieldConfigRows();
+      editingFields.push({ name: "", type: "单行文本", required: false, help: "" });
+      renderFieldConfigRows();
+      showToast("已新增自定义字段");
+    });
+
+    document.getElementById("createBtn").addEventListener("click", () => openEditModal());
+    document.getElementById("copyBtn").addEventListener("click", () => {
+      showToast(selectedRows().length ? "已复制选中模板" : "请先选择要复制的模板");
+    });
+    document.getElementById("disableBtn").addEventListener("click", () => {
+      showToast(selectedRows().length ? "已停用选中模板" : "请先选择要停用的模板");
+    });
+    document.getElementById("searchBtn").addEventListener("click", applyFilters);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("templateName").value = "";
+      document.getElementById("categoryFilter").value = "";
+      document.getElementById("statusFilter").value = "";
+      document.getElementById("creatorFilter").value = "";
+      document.getElementById("updateTimeFilter").value = "";
+      currentRows = templates.slice();
+      renderRows(currentRows);
+      showToast("筛选条件已重置");
+    });
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      readFieldConfigRows();
+      const name = document.getElementById("editTemplateName").value.trim();
+      const categories = selectedCategories.slice();
+      const status = document.getElementById("editStatus").value;
+      const tip = document.getElementById("editTip").value.trim();
+      const validFields = editingFields.filter(field => field.name);
+      if (!name) {
+        showToast("请填写模板名称");
+        return;
+      }
+      if (!categories.length) {
+        showToast("请至少选择一个适用岗位分类");
+        return;
+      }
+      if (!validFields.length) {
+        showToast("请至少配置一个提交字段");
+        return;
+      }
+      if (editingTemplate) {
+        Object.assign(editingTemplate, {
+          name,
+          categories,
+          status,
+          tip,
+          fields: validFields,
+          updateTime: "2026-07-09 09:30:00"
+        });
+      } else {
+        templates.unshift({
+          id: "TPL" + Date.now().toString().slice(-9),
+          name,
+          categories,
+          status,
+          version: "V1",
+          creator: "平台运营",
+          updateTime: "2026-07-09 09:30:00",
+          tip,
+          fields: validFields
+        });
+      }
+      currentRows = templates.slice();
+      renderRows(currentRows);
+      closeModals();
+      showToast("已保存模板，岗位分类和字段配置已更新");
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", closeModals);
+    });
+
+    document.querySelectorAll(".modal-mask").forEach(mask => {
+      mask.addEventListener("click", event => {
+        if (event.target === mask) closeModals();
+      });
+    });
+
+    document.addEventListener("click", event => {
+      if (!event.target.closest("#categoryCascade")) {
+        setCategoryPanelOpen(false);
+      }
+    });
+
+    renderRows(currentRows);
+  </script>
+</body>
+</html>

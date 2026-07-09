@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>版本记录 - 连续劳务平台</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #515a6e;
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      background: #f7f9fc;
+    }
+
+    .sidebar {
+      width: 200px;
+      flex: 0 0 200px;
+      background: #fff;
+      border-right: 1px solid #e8edf5;
+      box-shadow: 2px 0 8px rgba(17, 31, 44, .05);
+      z-index: 2;
+    }
+
+    .brand {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 10px;
+      border-bottom: 1px solid #f2f4f8;
+    }
+
+    .brand-mark {
+      font-size: 26px;
+      line-height: 1;
+      color: #ff9800;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand-name {
+      color: #202938;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu {
+      padding: 14px 0;
+    }
+
+    .menu-group {
+      margin-bottom: 6px;
+    }
+
+    .menu-title {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px 0 36px;
+      color: #4d4f53;
+      position: relative;
+    }
+
+    .menu-title::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border: 2px solid #606266;
+      border-radius: 50%;
+      position: absolute;
+      left: 13px;
+    }
+
+    .menu-title::after {
+      content: "^";
+      margin-left: auto;
+      color: #8a8f99;
+      font-size: 12px;
+    }
+
+    .menu-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding-left: 38px;
+      color: #606266;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .menu-item.active {
+      color: #2f8cf0;
+      background: #f7fbff;
+      font-weight: 500;
+      border-right: 3px solid #2f8cf0;
+    }
+
+    .main {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 52px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #edf1f7;
+    }
+
+    .tabs {
+      display: flex;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .tab {
+      min-width: 112px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid #f1f3f7;
+      color: #303133;
+      background: #fff;
+    }
+
+    .tab.active {
+      color: #2f8cf0;
+      background: #f7fbff;
+    }
+
+    .tab-close {
+      margin-left: 8px;
+      color: #9aa4b2;
+    }
+
+    .top-actions {
+      margin-left: auto;
+      padding-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #2586ee;
+      font-size: 13px;
+    }
+
+    .full-screen {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #2586ee;
+      border-radius: 3px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2f8cf0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .content {
+      flex: 1;
+      margin: 10px 10px 0 18px;
+      background: #fff;
+      border-left: 1px solid #edf1f7;
+      border-right: 1px solid #edf1f7;
+      overflow: auto;
+    }
+
+    .page-header {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      border-bottom: 1px solid #dde5ef;
+    }
+
+    .page-title {
+      color: #303133;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .page-subtitle {
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .btn {
+      height: 32px;
+      min-width: 58px;
+      padding: 0 16px;
+      border-radius: 4px;
+      border: 1px solid #d7dee9;
+      background: #fff;
+      color: #515a6e;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: #2f8cf0;
+      background: #2f8cf0;
+    }
+
+    .btn.back {
+      margin-left: auto;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 12px;
+      padding: 16px 18px 8px;
+    }
+
+    .summary-item {
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid #e5e9f0;
+      border-radius: 4px;
+      background: #fbfcfe;
+    }
+
+    .summary-label {
+      margin-bottom: 8px;
+      color: #7b8494;
+      font-size: 12px;
+    }
+
+    .summary-value {
+      color: #303133;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .main-grid {
+      padding: 10px 18px 18px;
+    }
+
+    .section {
+      min-width: 0;
+    }
+
+    .section-title {
+      color: #303133;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding-left: 8px;
+      border-left: 3px solid #2f8cf0;
+    }
+
+    .table-wrap {
+      border: 1px solid #e5e9f0;
+      overflow: auto;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      height: 38px;
+      padding: 0 10px;
+      border-right: 1px solid #e9edf3;
+      border-bottom: 1px solid #e9edf3;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    th {
+      color: #4e5969;
+      background: #f6f8fb;
+      font-weight: 600;
+    }
+
+    tbody tr.active {
+      background: #edf6ff;
+    }
+
+    tbody tr:hover {
+      background: #f5faff;
+    }
+
+    .link {
+      color: #2586ee;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .tag.version {
+      color: #1677ff;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+    }
+
+    .tag.current {
+      color: #389e0d;
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .35);
+      z-index: 20;
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 820px;
+      max-width: calc(100vw - 40px);
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, .18);
+    }
+
+    .modal-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid #edf1f7;
+      color: #303133;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      margin-left: auto;
+      border: 0;
+      background: transparent;
+      color: #9098a6;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      max-height: 70vh;
+      overflow: auto;
+    }
+
+    .modal-footer {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 0 20px;
+      border-top: 1px solid #edf1f7;
+    }
+
+    @media (max-width: 1100px) {
+      .sidebar {
+        width: 168px;
+        flex-basis: 168px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">悠客</div>
+        <div class="brand-name">智工快达</div>
+      </div>
+
+      <nav class="menu">
+        <div class="menu-group">
+          <div class="menu-title">用工管理</div>
+          <a class="menu-item" href="#">需求发布</a>
+          <a class="menu-item" href="#">交付审核</a>
+          <a class="menu-item active" href="./template-config.html">成果模板配置</a>
+          <a class="menu-item" href="#">招募与审核</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">财务结算</div>
+          <a class="menu-item" href="#">人员结算</a>
+          <a class="menu-item" href="./index.html">月度待结算</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">人员管理</div>
+          <a class="menu-item" href="#">人员管理</a>
+          <a class="menu-item" href="#">个人协议</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">服务商管理</div>
+          <a class="menu-item" href="#">个人平台协议</a>
+          <a class="menu-item" href="#">客户管理</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-title">账号管理</div>
+          <a class="menu-item" href="#">角色管理</a>
+          <a class="menu-item" href="#">账号管理</a>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="tabs">
+          <div class="tab">成果模板配置</div>
+          <div class="tab active">版本记录 <span class="tab-close">x</span></div>
+        </div>
+        <div class="top-actions">
+          <span>连续劳务计算器</span>
+          <span class="full-screen" aria-hidden="true"></span>
+          <span class="avatar">provider</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="page-header">
+          <div>
+            <div class="page-title">查看版本记录</div>
+            <div class="page-subtitle">查看成果模板每次启用、字段调整、岗位分类调整的历史记录</div>
+          </div>
+          <button class="btn back" id="backBtn">返回模板配置</button>
+        </div>
+
+        <div class="summary">
+          <div class="summary-item">
+            <div class="summary-label">模板名称</div>
+            <div class="summary-value" id="templateName">保洁服务成果模板</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">模板编号</div>
+            <div class="summary-value" id="templateId">TPL202607001</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">当前版本</div>
+            <div class="summary-value" id="currentVersion">V3</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">适用岗位分类</div>
+            <div class="summary-value" id="categories">生活服务-保洁服务、生活服务-家政保洁</div>
+          </div>
+        </div>
+
+        <div class="main-grid">
+          <div class="section">
+            <div class="section-title">版本记录</div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 90px;">版本号</th>
+                    <th style="width: 120px;">版本状态</th>
+                    <th style="width: 240px;">变更内容</th>
+                    <th style="width: 110px;">操作人</th>
+                    <th style="width: 170px;">生效时间</th>
+                    <th style="width: 90px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="versionBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-mask" id="fieldModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span id="fieldModalTitle">查看字段</span>
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 80px;">排序</th>
+                <th style="width: 180px;">字段名称</th>
+                <th style="width: 140px;">字段类型</th>
+                <th style="width: 100px;">必填</th>
+                <th style="width: 260px;">填写说明</th>
+              </tr>
+            </thead>
+            <tbody id="versionFieldBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-close>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const templateVersions = {
+      TPL202607001: {
+        id: "TPL202607001",
+        name: "保洁服务成果模板",
+        currentVersion: "V3",
+        categories: "生活服务-保洁服务、生活服务-家政保洁",
+        records: [
+          {
+            version: "V3",
+            current: true,
+            summary: "新增服务地点字段，调整照片填写说明",
+            operator: "平台运营",
+            effectiveTime: "2026-07-08 14:20:16",
+            fields: [
+              ["服务前照片", "图片上传", "是", "需体现作业前现场状态"],
+              ["服务后照片", "图片上传", "是", "需体现作业完成效果"],
+              ["服务地点", "定位", "是", "提交时授权获取定位"],
+              ["完成说明", "多行文本", "是", "简要描述完成内容"]
+            ]
+          },
+          {
+            version: "V2",
+            current: false,
+            summary: "适用岗位分类新增生活服务-家政保洁",
+            operator: "业务管理员",
+            effectiveTime: "2026-07-02 10:12:31",
+            fields: [
+              ["服务前照片", "图片上传", "是", "需体现作业前现场状态"],
+              ["服务后照片", "图片上传", "是", "需体现作业完成效果"],
+              ["完成说明", "多行文本", "是", "简要描述完成内容"]
+            ]
+          },
+          {
+            version: "V1",
+            current: false,
+            summary: "创建保洁服务成果模板并启用",
+            operator: "平台运营",
+            effectiveTime: "2026-06-28 09:30:00",
+            fields: [
+              ["服务前照片", "图片上传", "是", "上传任务开始前照片"],
+              ["服务后照片", "图片上传", "是", "上传任务完成后照片"],
+              ["完成说明", "多行文本", "是", "描述任务完成情况"]
+            ]
+          }
+        ]
+      }
+    };
+
+    const fallbackTemplate = templateVersions.TPL202607001;
+
+    function getTemplateId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("templateId") || "TPL202607001";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function renderPage() {
+      const template = templateVersions[getTemplateId()] || fallbackTemplate;
+      document.getElementById("templateName").textContent = template.name;
+      document.getElementById("templateId").textContent = template.id;
+      document.getElementById("currentVersion").textContent = template.currentVersion;
+      document.getElementById("categories").textContent = template.categories;
+
+      document.getElementById("versionBody").innerHTML = template.records.map(record => `
+          <tr data-version="${escapeHtml(record.version)}">
+            <td><span class="tag version">${escapeHtml(record.version)}</span></td>
+            <td>${record.current ? '<span class="tag current">当前版本</span>' : "历史版本"}</td>
+            <td title="${escapeHtml(record.summary)}">${escapeHtml(record.summary)}</td>
+            <td>${escapeHtml(record.operator)}</td>
+            <td>${escapeHtml(record.effectiveTime)}</td>
+            <td><button class="link" data-action="view-fields" data-version="${escapeHtml(record.version)}">查看</button></td>
+        </tr>
+      `).join("");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("show");
+    }
+
+    function closeModals() {
+      document.querySelectorAll(".modal-mask").forEach(modal => modal.classList.remove("show"));
+    }
+
+    function showVersionFields(record) {
+      document.getElementById("fieldModalTitle").textContent = `${record.version} 字段配置`;
+      document.getElementById("versionFieldBody").innerHTML = record.fields.map((field, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${escapeHtml(field[0])}</td>
+          <td>${escapeHtml(field[1])}</td>
+          <td>${escapeHtml(field[2])}</td>
+          <td>${escapeHtml(field[3])}</td>
+        </tr>
+      `).join("");
+      openModal("fieldModal");
+    }
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "./template-config.html";
+    });
+
+    document.getElementById("versionBody").addEventListener("click", event => {
+      const button = event.target.closest('button[data-action="view-fields"]');
+      if (!button) return;
+      const template = templateVersions[getTemplateId()] || fallbackTemplate;
+      const record = template.records.find(item => item.version === button.dataset.version);
+      if (record) showVersionFields(record);
+    });
+
+    document.querySelectorAll("[data-close]").forEach(button => {
+      button.addEventListener("click", closeModals);
+    });
+
+    document.querySelectorAll(".modal-mask").forEach(mask => {
+      mask.addEventListener("click", event => {
+        if (event.target === mask) closeModals();
+      });
+    });
+
+    renderPage();
+  </script>
+</body>
+</html>
