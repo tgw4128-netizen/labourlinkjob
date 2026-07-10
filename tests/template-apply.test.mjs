@@ -22,12 +22,19 @@ assert.doesNotMatch(page, /id="templateVersion"/);
 assert.doesNotMatch(page, /id="fieldCount"/);
 assert.doesNotMatch(page, /template-summary/);
 assert.doesNotMatch(page, /个人端提交预览/);
+assert.match(page, /href="\.\/result-submit\.html"/);
+assert.match(page, /href="\.\/result-submit-mini\.html"/);
 
 assert.match(handoff, /href="\.\/template-apply\.html"/);
 assert.match(handoff, /id="screen-apply"/);
 assert.match(handoff, /保存岗位时应保存“引用模板 ID、版本号、岗位字段快照”/);
+assert.match(handoff, /href="\.\/result-submit\.html"/);
+assert.match(handoff, /href="\.\/result-submit-mini\.html"/);
+assert.match(handoff, /工时数、天数等数量字段属于任务结算配置/);
 
 assert.match(deployScript, /"template-apply\.html"/);
+assert.match(deployScript, /"result-submit\.html"/);
+assert.match(deployScript, /"result-submit-mini\.html"/);
 assert.doesNotMatch(deployScript, /"monthly-settlement\.html"/);
 
 console.log("template apply checks passed");

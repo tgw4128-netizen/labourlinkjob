@@ -501,9 +501,10 @@
       <button class="tree-item" data-target="screen-config"><span class="tree-index">2</span> 成果模板配置</button>
       <button class="tree-item" data-target="screen-edit"><span class="tree-index">3</span> 新增/编辑模板</button>
       <button class="tree-item" data-target="screen-apply"><span class="tree-index">4</span> 模板应用</button>
-      <button class="tree-item" data-target="screen-version"><span class="tree-index">5</span> 版本记录</button>
-      <button class="tree-item" data-target="screen-field-view"><span class="tree-index">6</span> 查看字段</button>
-      <button class="tree-item" data-target="screen-dev"><span class="tree-index">7</span> 开发说明</button>
+      <button class="tree-item" data-target="screen-submit"><span class="tree-index">5</span> 个人提交成果</button>
+      <button class="tree-item" data-target="screen-version"><span class="tree-index">6</span> 版本记录</button>
+      <button class="tree-item" data-target="screen-field-view"><span class="tree-index">7</span> 查看字段</button>
+      <button class="tree-item" data-target="screen-dev"><span class="tree-index">8</span> 开发说明</button>
     </aside>
 
     <main class="canvas">
@@ -515,6 +516,8 @@
         <div class="actions">
           <a class="btn primary" href="./template-config.html">打开成果模板配置页</a>
           <a class="btn" href="./template-apply.html">打开模板应用页</a>
+          <a class="btn" href="./result-submit.html">打开 PC 提交页</a>
+          <a class="btn" href="./result-submit-mini.html">打开小程序提交页</a>
           <a class="btn" href="./template-version-record.html?templateId=TPL202607001">打开版本记录页</a>
         </div>
       </header>
@@ -578,6 +581,18 @@
                 <td>当前岗位可在模板字段基础上单独调整。</td>
               </tr>
               <tr>
+                <td>PC 提交成果</td>
+                <td>个人按任务快照填写固定数量与交付成果。</td>
+                <td><a class="tag" href="./result-submit.html">result-submit.html</a></td>
+                <td>不提供模板选择器。</td>
+              </tr>
+              <tr>
+                <td>小程序提交成果</td>
+                <td>移动端单列填写页面，字段规则与 PC 端一致。</td>
+                <td><a class="tag" href="./result-submit-mini.html">result-submit-mini.html</a></td>
+                <td>底部提交栏兼容安全区。</td>
+              </tr>
+              <tr>
                 <td>版本记录</td>
                 <td>查看模板历次启用、字段调整、分类调整记录。</td>
                 <td><a class="tag" href="./template-version-record.html?templateId=TPL202607001">template-version-record.html</a></td>
@@ -617,6 +632,43 @@
               <li>当前岗位可修改字段名称、字段类型、是否必填、填写说明；字段类型为单选/多选时可填写选项备注。</li>
               <li>字段表格中必填字段展示红色星号，个人端提交页按最终字段快照生成。</li>
               <li>保存岗位时应保存“引用模板 ID、版本号、岗位字段快照”，避免模板后续变更影响已发布岗位。</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-submit">
+        <div class="screen-head">
+          <div>
+            <h2 class="screen-title">个人提交成果</h2>
+            <p class="screen-desc">PC 与小程序页面均根据任务已绑定的模板快照生成提交字段。</p>
+          </div>
+          <span class="tag">个人端</span>
+        </div>
+        <div class="screen-body two-column">
+          <div class="wireframe">
+            <div class="fake-toolbar">
+              <span class="fake-control">任务信息</span>
+              <span class="fake-control">固定数量：工时数 / 天数</span>
+              <span class="fake-control primary">确认提交</span>
+            </div>
+            <div class="fake-table" style="grid-template-columns: 1fr 1fr;">
+              <div class="fake-cell">服务前照片 *</div>
+              <div class="fake-cell">图片上传</div>
+              <div class="fake-cell">完成时间 *</div>
+              <div class="fake-cell">日期时间</div>
+              <div class="fake-cell">服务结果 *</div>
+              <div class="fake-cell">单选</div>
+            </div>
+          </div>
+          <div class="notes">
+            <div class="note-title">交互备注</div>
+            <ol>
+              <li>个人端不选择模板，任务保存模板字段快照。</li>
+              <li>工时数、天数等数量字段属于任务结算配置，不属于模板字段。</li>
+              <li>必填数量与必填模板字段均显示红色星号，提交时必须校验。</li>
+              <li>单选、多选根据模板选项备注按 # 分隔生成候选项。</li>
+              <li>上传字段支持选择文件、展示文件名和移除文件；原型不接入后端上传。</li>
             </ol>
           </div>
         </div>

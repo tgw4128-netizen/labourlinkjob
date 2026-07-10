@@ -258,6 +258,10 @@
       color: #26364d;
       cursor: pointer;
       font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn.primary {
@@ -455,7 +459,11 @@
               <div class="panel-title">成果提交模板</div>
               <div class="panel-subtitle">选择后台已配置的模板后，系统自动带出字段，当前岗位可在模板基础上调整。</div>
             </div>
-            <button class="btn warning" id="resetTemplateBtn">恢复模板默认字段</button>
+            <div style="display: flex; gap: 10px;">
+              <a class="btn" href="./result-submit.html">查看 PC 提交页</a>
+              <a class="btn" href="./result-submit-mini.html">查看小程序提交页</a>
+              <button class="btn warning" id="resetTemplateBtn">恢复模板默认字段</button>
+            </div>
           </div>
           <div class="panel-body">
             <div class="form-grid">

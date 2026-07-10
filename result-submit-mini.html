@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="supported-field-types" content="单行文本 多行文本 图片上传 文件上传 视频上传 日期时间 单选 多选">
+  <title>提交成果 - 小程序</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f7fb; color: #26364d; font: 14px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .nav { position: sticky; top: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px; background: #fff; border-bottom: 1px solid #ebeff5; }
+    .nav h1 { margin: 0; color: #1f2f46; font-size: 17px; }
+    .close { border: 0; background: none; color: #77849a; font-size: 22px; cursor: pointer; }
+    .page { padding: 12px 12px calc(84px + env(safe-area-inset-bottom)); }
+    .card { margin-bottom: 12px; padding: 16px; border-radius: 8px; background: #fff; }
+    .card-title { margin: 0 0 14px; color: #23354d; font-size: 16px; }
+    .task-name { margin-bottom: 12px; color: #1b2d45; font-size: 17px; font-weight: 700; }
+    .task-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; color: #4c5b70; font-size: 12px; line-height: 1.5; }
+    .task-grid span { color: #909bad; }
+    .tip { margin: -2px 0 14px; padding: 9px 10px; border-radius: 5px; background: #f3f8ff; color: #617793; font-size: 12px; line-height: 1.6; }
+    .submit-field { padding: 15px 0; border-top: 1px solid #edf0f5; }
+    .submit-field:first-of-type { border-top: 0; }
+    .field-label { display: block; margin-bottom: 9px; color: #33445b; font-weight: 600; }
+    .required::before { content: "*"; margin-right: 3px; color: #f5222d; }
+    input, textarea { width: 100%; border: 1px solid #d7dee9; border-radius: 5px; color: #29394f; background: #fff; font: inherit; outline: none; }
+    input { height: 40px; padding: 0 11px; }
+    textarea { min-height: 116px; padding: 10px 11px; resize: vertical; line-height: 1.6; }
+    input:focus, textarea:focus { border-color: #2f80ed; box-shadow: 0 0 0 2px rgba(47,128,237,.12); }
+    .quantity-row { display: flex; align-items: center; gap: 9px; } .quantity-row span { min-width: 18px; color: #657389; }
+    .field-help, .upload-help { margin-top: 7px; color: #98a3b2; font-size: 12px; line-height: 1.55; }
+    .counter { margin-top: 5px; color: #a0aaba; text-align: right; font-size: 11px; }
+    .choice-group { display: flex; flex-wrap: wrap; gap: 9px; }
+    .choice-option { display: inline-flex; align-items: center; gap: 5px; min-height: 34px; padding: 0 10px; border: 1px solid #dce5f0; border-radius: 5px; color: #48576d; font-size: 13px; }
+    .choice-option input { width: auto; height: auto; accent-color: #2f80ed; }
+    .upload-shell { padding: 12px; border: 1px dashed #bbcee4; border-radius: 6px; background: #fbfdff; }
+    .upload-button { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 4px; background: #2f80ed; color: #fff; cursor: pointer; font-size: 13px; }
+    .upload-button input { display: none; }
+    .file-list { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+    .file-name { display: flex; align-items: center; justify-content: space-between; gap: 7px; padding: 7px 8px; border-radius: 4px; background: #edf5ff; color: #47729a; font-size: 12px; }
+    .file-name button { border: 0; background: transparent; color: #67809b; font-size: 16px; }
+    .submit-bar { position: fixed; right: 0; bottom: 0; left: 0; z-index: 4; display: flex; gap: 10px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid #e6ebf2; background: rgba(255,255,255,.98); }
+    .btn { flex: 1; height: 42px; border: 1px solid #d3dce8; border-radius: 6px; background: #fff; color: #536176; font: inherit; } .btn.primary { border-color: #2f80ed; background: #2f80ed; color: #fff; }
+    .toast { position: fixed; bottom: calc(78px + env(safe-area-inset-bottom)); left: 50%; z-index: 8; max-width: calc(100% - 48px); padding: 10px 14px; border-radius: 5px; background: rgba(29,43,61,.93); color: #fff; font-size: 13px; opacity: 0; transform: translate(-50%, 8px); transition: .2s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  </style>
+</head>
+<body>
+  <header class="nav"><h1>提交成果</h1><button class="close" id="cancelBtn" aria-label="关闭">x</button></header>
+  <main class="page">
+    <section class="card"><h2 class="card-title">任务信息</h2><div class="task-name" id="taskName"></div><div class="task-grid"><div><span>任务编号</span><br><b id="taskNumber"></b></div><div><span>客户名称</span><br><b id="taskCustomer"></b></div><div><span>结算方式</span><br><b id="settlementMethod"></b></div><div><span>单价</span><br><b id="unitPrice"></b></div></div></section>
+    <section class="card"><h2 class="card-title">提交信息</h2><div class="tip" id="templateTip"></div><div class="submit-field"><label class="field-label required" for="quantityInput" id="quantityLabel"></label><div class="quantity-row"><input id="quantityInput" type="number" min="0.01" step="0.01" placeholder="请输入"><span id="quantityUnit"></span></div></div><div id="fieldForm"></div></section>
+  </main>
+  <footer class="submit-bar"><button class="btn" onclick="document.getElementById('cancelBtn').click()">取消</button><button class="btn primary" id="submitBtn">确认提交</button></footer>
+  <div class="toast" id="toast"></div>
+  <script src="./result-submit-shared.js"></script>
+</body>
+</html>
