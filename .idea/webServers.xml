@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="7835e1b4-14c3-4188-b9b6-9e33b594acce" name="Aliyun-Labourlinkjob" url="http://8.153.206.156:8081/">
+        <fileTransfer rootFolder="/opt/labourlinkjob" accessType="SFTP" host="8.153.206.156" port="22" sshConfigId="282dfa0e-58a6-45df-8bd5-2c949e9aa1e3" sshConfig="root@8.153.206.156:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原型入口 - 连续劳务平台</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 980px; background: #f5f7fb; color: #26364d; font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; }
+    .topbar { height: 58px; display: flex; align-items: center; padding: 0 28px; border-bottom: 1px solid #e5ebf3; background: #fff; }
+    .brand { display: flex; align-items: center; gap: 10px; color: #1e3048; font-size: 16px; font-weight: 700; }
+    .brand-mark { color: #ff8a00; font-size: 22px; font-weight: 800; }
+    .page { width: 1080px; margin: 0 auto; padding: 30px 0 48px; }
+    h1 { margin: 0; color: #1d2e45; font-size: 22px; }
+    .subtitle { margin: 8px 0 26px; color: #78869a; }
+    .group { margin-bottom: 18px; border: 1px solid #dfe7f0; border-radius: 6px; background: #fff; }
+    .group-title { padding: 14px 18px; border-bottom: 1px solid #e9eef5; color: #304158; font-size: 15px; font-weight: 700; }
+    .list { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .entry { display: flex; align-items: center; justify-content: space-between; min-height: 82px; padding: 16px 18px; border-right: 1px solid #edf1f6; border-bottom: 1px solid #edf1f6; text-decoration: none; }
+    .entry:nth-child(2n) { border-right: 0; }
+    .entry:nth-last-child(-n + 2) { border-bottom: 0; }
+    .entry:hover { background: #f6faff; }
+    .entry-name { color: #21344c; font-size: 15px; font-weight: 600; }
+    .entry-desc { margin-top: 6px; color: #8490a1; font-size: 12px; line-height: 1.5; }
+    .go { display: inline-flex; align-items: center; justify-content: center; min-width: 62px; height: 30px; margin-left: 18px; border: 1px solid #bcd5f2; border-radius: 4px; color: #2f80ed; background: #fff; font-size: 12px; }
+    .entry:hover .go { border-color: #2f80ed; background: #2f80ed; color: #fff; }
+    .note { margin-top: 16px; padding: 12px 14px; border: 1px solid #dceafb; border-radius: 5px; background: #f6faff; color: #66809e; font-size: 12px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="brand-mark">悠客</span><span>连续劳务平台原型</span></div></header>
+  <main class="page">
+    <h1>原型入口</h1>
+    <p class="subtitle">选择页面查看成果模板配置、岗位应用和个人提交成果流程。</p>
+
+    <section class="group">
+      <div class="group-title">后台配置与岗位发布</div>
+      <div class="list">
+        <a class="entry" href="./template-config.html"><div><div class="entry-name">成果模板配置</div><div class="entry-desc">维护模板、岗位分类、字段与版本记录。</div></div><span class="go">打开</span></a>
+        <a class="entry" href="./template-apply.html"><div><div class="entry-name">岗位模板应用</div><div class="entry-desc">岗位发布时引用模板，并生成任务字段快照。</div></div><span class="go">打开</span></a>
+        <a class="entry" href="./template-version-record.html?templateId=TPL202607001"><div><div class="entry-name">模板版本记录</div><div class="entry-desc">查看历次模板变更与字段快照。</div></div><span class="go">打开</span></a>
+        <a class="entry" href="./axure-handoff.html"><div><div class="entry-name">Axure 交付说明</div><div class="entry-desc">查看页面范围、交互规则和开发验收口径。</div></div><span class="go">打开</span></a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-title">个人提交成果</div>
+      <div class="list">
+        <a class="entry" href="./result-submit.html"><div><div class="entry-name">PC 提交成果页</div><div class="entry-desc">桌面端填写固定数量与任务绑定的成果字段。</div></div><span class="go">打开</span></a>
+        <a class="entry" href="./result-submit-mini.html"><div><div class="entry-name">小程序提交成果页</div><div class="entry-desc">移动端单列提交，字段规则与 PC 端一致。</div></div><span class="go">打开</span></a>
+      </div>
+    </section>
+
+    <div class="note">个人端提交页面不支持切换模板；工时数、天数等数量字段属于任务结算配置，不属于成果模板字段。</div>
+  </main>
+</body>
+</html>

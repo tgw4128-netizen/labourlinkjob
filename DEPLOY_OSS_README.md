@@ -68,6 +68,7 @@ chmod +x deploy-oss.sh
 脚本会上传这些文件：
 
 ```text
+prototype-entry.html
 axure-handoff.html
 template-apply.html
 result-submit.html
