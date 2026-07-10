@@ -16,6 +16,7 @@
     .group { margin-bottom: 18px; border: 1px solid #dfe7f0; border-radius: 6px; background: #fff; }
     .group-title { padding: 14px 18px; border-bottom: 1px solid #e9eef5; color: #304158; font-size: 15px; font-weight: 700; }
     .list { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .group.single .list { grid-template-columns: 1fr; }
     .entry { display: flex; align-items: center; justify-content: space-between; min-height: 82px; padding: 16px 18px; border-right: 1px solid #edf1f6; border-bottom: 1px solid #edf1f6; text-decoration: none; }
     .entry:nth-child(2n) { border-right: 0; }
     .entry:nth-last-child(-n + 2) { border-bottom: 0; }
@@ -31,15 +32,12 @@
   <header class="topbar"><div class="brand"><span class="brand-mark">悠客</span><span>连续劳务平台原型</span></div></header>
   <main class="page">
     <h1>原型入口</h1>
-    <p class="subtitle">选择页面查看成果模板配置、岗位应用和个人提交成果流程。</p>
+    <p class="subtitle">选择模块进入对应页面，查看模板配置和个人提交成果流程。</p>
 
-    <section class="group">
-      <div class="group-title">后台配置与岗位发布</div>
+    <section class="group single">
+      <div class="group-title">成果模板配置</div>
       <div class="list">
         <a class="entry" href="./template-config.html"><div><div class="entry-name">成果模板配置</div><div class="entry-desc">维护模板、岗位分类、字段与版本记录。</div></div><span class="go">打开</span></a>
-        <a class="entry" href="./template-apply.html"><div><div class="entry-name">岗位模板应用</div><div class="entry-desc">岗位发布时引用模板，并生成任务字段快照。</div></div><span class="go">打开</span></a>
-        <a class="entry" href="./template-version-record.html?templateId=TPL202607001"><div><div class="entry-name">模板版本记录</div><div class="entry-desc">查看历次模板变更与字段快照。</div></div><span class="go">打开</span></a>
-        <a class="entry" href="./axure-handoff.html"><div><div class="entry-name">Axure 交付说明</div><div class="entry-desc">查看页面范围、交互规则和开发验收口径。</div></div><span class="go">打开</span></a>
       </div>
     </section>
 
@@ -48,6 +46,13 @@
       <div class="list">
         <a class="entry" href="./result-submit.html"><div><div class="entry-name">PC 提交成果页</div><div class="entry-desc">桌面端填写固定数量与任务绑定的成果字段。</div></div><span class="go">打开</span></a>
         <a class="entry" href="./result-submit-mini.html"><div><div class="entry-name">小程序提交成果页</div><div class="entry-desc">移动端单列提交，字段规则与 PC 端一致。</div></div><span class="go">打开</span></a>
+      </div>
+    </section>
+
+    <section class="group single">
+      <div class="group-title">Axure 交付说明</div>
+      <div class="list">
+        <a class="entry" href="./axure-handoff.html"><div><div class="entry-name">Axure 交付说明</div><div class="entry-desc">查看页面范围、交互规则和开发验收口径。</div></div><span class="go">打开</span></a>
       </div>
     </section>
 

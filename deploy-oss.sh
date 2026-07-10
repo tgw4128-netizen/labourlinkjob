@@ -31,7 +31,6 @@ fi
 FILES=(
   "prototype-entry.html"
   "axure-handoff.html"
-  "template-apply.html"
   "result-submit.html"
   "result-submit-mini.html"
   "result-submit-shared.js"
