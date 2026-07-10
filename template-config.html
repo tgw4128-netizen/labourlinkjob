@@ -579,6 +579,14 @@
       width: 100%;
     }
 
+    .category-specific {
+      margin-top: 8px;
+    }
+
+    .category-specific.is-hidden {
+      display: none;
+    }
+
     .category-trigger {
       width: 100%;
       min-height: 32px;
@@ -987,15 +995,22 @@
             </div>
             <div class="form-item wide">
               <label class="required">适用岗位分类</label>
-              <div class="category-cascade" id="categoryCascade">
-                <button class="category-trigger" id="categoryTrigger" type="button">
-                  <span class="category-trigger-text" id="categoryTriggerText">请选择适用岗位分类</span>
-                  <span class="category-trigger-arrow">⌄</span>
-                </button>
-                <div class="category-panel" id="categoryPanel">
-                  <div class="category-parents" id="categoryParents"></div>
-                  <div class="category-children" id="categoryChildren"></div>
+              <select id="categoryMode">
+                <option value="ALL">全部</option>
+                <option value="SPECIFIC">指定分类</option>
+              </select>
+              <div class="category-specific" id="specificCategoryWrap">
+                <div class="category-cascade" id="categoryCascade">
+                  <button class="category-trigger" id="categoryTrigger" type="button">
+                    <span class="category-trigger-text" id="categoryTriggerText">请选择适用岗位分类</span>
+                    <span class="category-trigger-arrow">⌄</span>
+                  </button>
+                  <div class="category-panel" id="categoryPanel">
+                    <div class="category-parents" id="categoryParents"></div>
+                    <div class="category-children" id="categoryChildren"></div>
+                  </div>
                 </div>
+                <div class="field-help">指定分类时，可选择多个一级-二级岗位分类。</div>
               </div>
             </div>
             <div class="form-item">
@@ -1197,7 +1212,7 @@
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = data.map((row, index) => {
         const status = statusMap[row.status];
-        const categoryText = row.categories.join("、");
+        const categoryText = row.categoryMode === "ALL" ? "全部" : row.categories.join("、");
         return `
           <tr data-id="${row.id}">
             <td class="center sticky-selection"><input type="checkbox" class="row-check" value="${row.id}"></td>
@@ -1252,7 +1267,7 @@
     function showPreview(row) {
       document.getElementById("previewTitle").textContent = row.name;
       document.querySelector(".phone-tip").textContent = row.tip;
-      document.getElementById("auditCategory").textContent = row.categories.join("、");
+      document.getElementById("auditCategory").textContent = row.categoryMode === "ALL" ? "全部" : row.categories.join("、");
       document.getElementById("auditVersion").textContent = row.version;
       document.getElementById("previewFields").innerHTML = row.fields.map(field => `
         <div class="submit-field">
@@ -1264,8 +1279,13 @@
     }
 
     function renderCategoryCascade() {
+      const mode = document.getElementById("categoryMode").value;
+      const specificWrap = document.getElementById("specificCategoryWrap");
+      specificWrap.classList.toggle("is-hidden", mode === "ALL");
       const activeGroup = categoryTree.find(group => group.parent === activeCategoryParent) || categoryTree[0];
-      const triggerText = selectedCategories.length
+      const triggerText = mode === "ALL"
+        ? "全部"
+        : selectedCategories.length
         ? selectedCategories.join(" / ")
         : "请选择适用岗位分类";
       document.getElementById("categoryTriggerText").textContent = triggerText;
@@ -1358,6 +1378,7 @@
       editingTemplate = row || null;
       const source = row || {
         name: "",
+        categoryMode: "SPECIFIC",
         categories: ["生活服务-保洁服务"],
         status: "DRAFT",
         tip: "请按要求上传工作成果材料。",
@@ -1367,9 +1388,10 @@
       };
       document.querySelector("#editModal .modal-header").childNodes[0].nodeValue = row ? "编辑模板" : "新增模板";
       document.getElementById("editTemplateName").value = source.name;
+      document.getElementById("categoryMode").value = source.categoryMode === "ALL" ? "ALL" : "SPECIFIC";
       document.getElementById("editStatus").value = source.status;
       document.getElementById("editTip").value = source.tip;
-      selectedCategories = source.categories.slice();
+      selectedCategories = (source.categories || []).slice();
       activeCategoryParent = selectedCategories[0]?.split("-")[0] || categoryTree[0].parent;
       renderCategoryCascade();
       setCategoryPanelOpen(false);
@@ -1384,8 +1406,8 @@
       const status = document.getElementById("statusFilter").value;
       const creator = document.getElementById("creatorFilter").value.trim();
       currentRows = templates.filter(row => {
-        return (!name || row.name.includes(name))
-          && (!category || row.categories.includes(category))
+      return (!name || row.name.includes(name))
+          && (!category || row.categoryMode === "ALL" || row.categories.includes(category))
           && (!status || row.status === status)
           && (!creator || row.creator.includes(creator));
       });
@@ -1416,6 +1438,14 @@
       event.stopPropagation();
       const panel = document.getElementById("categoryPanel");
       setCategoryPanelOpen(!panel.classList.contains("show"));
+    });
+
+    document.getElementById("categoryMode").addEventListener("change", event => {
+      if (event.target.value === "ALL") {
+        selectedCategories = [];
+        setCategoryPanelOpen(false);
+      }
+      renderCategoryCascade();
     });
 
     document.getElementById("categoryParents").addEventListener("click", event => {
@@ -1492,7 +1522,8 @@
     document.getElementById("saveBtn").addEventListener("click", () => {
       readFieldConfigRows();
       const name = document.getElementById("editTemplateName").value.trim();
-      const categories = selectedCategories.slice();
+      const categoryMode = document.getElementById("categoryMode").value;
+      const categories = categoryMode === "ALL" ? [] : selectedCategories.slice();
       const status = document.getElementById("editStatus").value;
       const tip = document.getElementById("editTip").value.trim();
       const validFields = editingFields.filter(field => field.name);
@@ -1501,7 +1532,7 @@
         showToast("请填写模板名称");
         return;
       }
-      if (!categories.length) {
+      if (categoryMode === "SPECIFIC" && !categories.length) {
         showToast("请至少选择一个适用岗位分类");
         return;
       }
@@ -1516,6 +1547,7 @@
       if (editingTemplate) {
         Object.assign(editingTemplate, {
           name,
+          categoryMode,
           categories,
           status,
           tip,
@@ -1527,6 +1559,7 @@
         templates.unshift({
           id: "TPL" + Date.now().toString().slice(-9),
           name,
+          categoryMode,
           categories,
           status,
           version: "V1",
