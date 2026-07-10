@@ -301,7 +301,7 @@
 
     table {
       border-collapse: collapse;
-      width: 1540px;
+      width: 1830px;
       background: #fff;
       font-size: 12px;
     }
@@ -324,11 +324,44 @@
       font-weight: 600;
     }
 
+    .sticky-selection,
+    .sticky-operation {
+      position: sticky;
+    }
+
+    .sticky-selection {
+      left: 0;
+      z-index: 3;
+    }
+
+    .sticky-operation {
+      left: 46px;
+      z-index: 2;
+      background: #fff;
+      box-shadow: 4px 0 8px rgba(31, 56, 88, .06);
+    }
+
+    thead .sticky-selection,
+    thead .sticky-operation {
+      z-index: 4;
+      background: #f6f8fb;
+    }
+
     tbody tr:nth-child(1) {
       background: #edf6ff;
     }
 
+    tbody tr:nth-child(1) .sticky-selection,
+    tbody tr:nth-child(1) .sticky-operation {
+      background: #edf6ff;
+    }
+
     tbody tr:hover {
+      background: #f5faff;
+    }
+
+    tbody tr:hover .sticky-selection,
+    tbody tr:hover .sticky-operation {
       background: #f5faff;
     }
 
@@ -533,6 +566,11 @@
 
     .field-help {
       color: #7b8494;
+      font-size: 12px;
+    }
+
+    .field-note {
+      color: #a0a9b8;
       font-size: 12px;
     }
 
@@ -798,7 +836,7 @@
       <nav class="menu">
         <div class="menu-group">
           <div class="menu-title">用工管理</div>
-          <a class="menu-item" href="#">需求发布</a>
+          <a class="menu-item" href="./template-apply.html">需求发布</a>
           <a class="menu-item" href="#">交付审核</a>
           <a class="menu-item active" href="./template-config.html">成果模板配置</a>
           <a class="menu-item" href="#">招募与审核</a>
@@ -899,7 +937,8 @@
           <table>
             <thead>
               <tr>
-                <th class="center" style="width: 46px;"><input type="checkbox" id="checkAll"></th>
+                <th class="center sticky-selection" style="width: 46px;"><input type="checkbox" id="checkAll"></th>
+                <th class="operation-column sticky-operation" style="width: 260px;">操作</th>
                 <th class="center" style="width: 56px;">序号</th>
                 <th style="width: 130px;">模板编号</th>
                 <th style="width: 180px;">模板名称</th>
@@ -908,8 +947,9 @@
                 <th style="width: 90px;">状态</th>
                 <th style="width: 90px;">当前版本</th>
                 <th style="width: 120px;">创建人</th>
+                <th style="width: 170px;">创建时间</th>
+                <th style="width: 120px;">修改人</th>
                 <th style="width: 170px;">更新时间</th>
-                <th style="width: 260px;">操作</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -976,7 +1016,7 @@
           <div class="detail-title">字段配置</div>
           <div class="field-toolbar">
             <button class="btn primary" id="addFieldBtn">新增字段</button>
-            <span class="field-help">字段名称、类型、是否必填、填写说明均可自定义配置；必填字段会在个人端以红色星号标记。</span>
+            <span class="field-help">字段名称、类型、是否必填、填写说明均可自定义；单选/多选需填写选项备注。</span>
           </div>
           <table class="field-table">
             <thead>
@@ -985,7 +1025,8 @@
                 <th style="width: 150px;"><span class="required-star">*</span>字段名称</th>
                 <th style="width: 110px;"><span class="required-star">*</span>字段类型</th>
                 <th style="width: 80px;"><span class="required-star">*</span>必填</th>
-                <th style="width: 310px;">填写说明</th>
+                <th style="width: 230px;">填写说明</th>
+                <th style="width: 220px;">备注</th>
                 <th style="width: 80px;">操作</th>
               </tr>
             </thead>
@@ -1054,7 +1095,7 @@
       { parent: "直播运营", children: ["直播助播"] }
     ];
     const categoryOptions = categoryTree.flatMap(group => group.children.map(child => `${group.parent}-${child}`));
-    const fieldTypes = ["单行文本", "多行文本", "图片上传", "文件上传", "视频上传", "链接", "数字", "日期时间", "定位", "单选", "多选"];
+    const fieldTypes = ["单行文本", "多行文本", "图片上传", "文件上传", "视频上传", "日期时间", "单选", "多选"];
 
     const templates = [
       {
@@ -1064,12 +1105,14 @@
         status: "ENABLED",
         version: "V3",
         creator: "平台运营",
+        createTime: "2026-06-28 09:30:00",
+        modifier: "平台运营",
         updateTime: "2026-07-08 14:20:16",
         tip: "请按要求上传清晰的工作成果材料，图片需能体现任务完成情况。",
         fields: [
           { name: "服务前照片", type: "图片上传", required: true, rule: "最多 3 张，jpg/png", help: "需体现作业前现场状态", audit: "照片清晰、地点匹配" },
           { name: "服务后照片", type: "图片上传", required: true, rule: "最多 3 张，jpg/png", help: "需体现作业完成效果", audit: "与服务前照片形成对比" },
-          { name: "服务地点", type: "定位", required: true, rule: "必须获取 GPS", help: "提交时授权获取定位", audit: "定位应在任务服务范围内" },
+          { name: "服务地点", type: "单行文本", required: true, rule: "填写服务地点", help: "填写实际服务地点", audit: "地点应在任务服务范围内" },
           { name: "完成说明", type: "多行文本", required: true, rule: "300 字以内", help: "简要描述完成内容", audit: "说明与图片材料一致" }
         ]
       },
@@ -1080,6 +1123,8 @@
         status: "ENABLED",
         version: "V2",
         creator: "业务管理员",
+        createTime: "2026-06-30 10:12:31",
+        modifier: "业务管理员",
         updateTime: "2026-07-07 09:45:33",
         tip: "请上传签收凭证并填写配送单号，异常情况需补充说明。",
         fields: [
@@ -1096,12 +1141,14 @@
         status: "DRAFT",
         version: "V1",
         creator: "平台运营",
+        createTime: "2026-07-01 16:40:20",
+        modifier: "平台运营",
         updateTime: "2026-07-06 18:02:11",
         tip: "请提交推广现场材料和有效推广数据，客户名单可按需上传。",
         fields: [
-          { name: "推广地点", type: "定位", required: true, rule: "必须获取 GPS", help: "提交时授权定位", audit: "定位与推广城市一致" },
+          { name: "推广地点", type: "单行文本", required: true, rule: "填写推广地点", help: "填写实际推广地点", audit: "地点与推广城市一致" },
           { name: "现场照片", type: "图片上传", required: true, rule: "最多 5 张，jpg/png", help: "上传活动现场照片", audit: "照片需体现真实推广场景" },
-          { name: "推广人数", type: "数字", required: true, rule: "大于 0", help: "填写有效推广人数", audit: "数量应与客户名单匹配" },
+          { name: "推广人数", type: "单行文本", required: true, rule: "填写大于 0 的人数", help: "填写有效推广人数", audit: "数量应与客户名单匹配" },
           { name: "客户名单", type: "文件上传", required: false, rule: "xlsx/csv", help: "上传有效客户名单", audit: "文件格式正确，可打开" },
           { name: "工作总结", type: "多行文本", required: true, rule: "500 字以内", help: "填写推广总结", audit: "总结内容与推广目标一致" }
         ]
@@ -1113,12 +1160,14 @@
         status: "DISABLED",
         version: "V1",
         creator: "业务管理员",
+        createTime: "2026-07-02 11:27:49",
+        modifier: "平台运营",
         updateTime: "2026-07-03 11:27:49",
         tip: "请上传设计源文件、预览图，作品链接可作为补充材料。",
         fields: [
           { name: "设计源文件", type: "文件上传", required: true, rule: "psd/ai/sketch", help: "上传可编辑源文件", audit: "文件可正常打开" },
           { name: "预览图", type: "图片上传", required: true, rule: "最多 6 张，jpg/png", help: "上传设计预览图", audit: "预览图与源文件一致" },
-          { name: "作品链接", type: "链接", required: false, rule: "URL 格式", help: "填写在线作品链接", audit: "链接可访问" },
+          { name: "作品链接", type: "单行文本", required: false, rule: "填写 URL", help: "填写在线作品链接", audit: "链接可访问" },
           { name: "修改说明", type: "多行文本", required: false, rule: "500 字以内", help: "说明本次修改内容", audit: "修改说明清楚" }
         ]
       }
@@ -1151,7 +1200,14 @@
         const categoryText = row.categories.join("、");
         return `
           <tr data-id="${row.id}">
-            <td class="center"><input type="checkbox" class="row-check" value="${row.id}"></td>
+            <td class="center sticky-selection"><input type="checkbox" class="row-check" value="${row.id}"></td>
+            <td class="operation-column sticky-operation">
+              <button class="link" data-action="preview" data-id="${row.id}">预览</button>
+              <button class="link" data-action="edit" data-id="${row.id}">编辑</button>
+              <button class="link" data-action="copy" data-id="${row.id}">复制</button>
+              <button class="link" data-action="toggle" data-id="${row.id}">${row.status === "DISABLED" ? "启用" : "停用"}</button>
+              <button class="link" data-action="version" data-id="${row.id}">版本记录</button>
+            </td>
             <td class="center">${index + 1}</td>
             <td>${row.id}</td>
             <td>${row.name}</td>
@@ -1160,14 +1216,9 @@
             <td><span class="tag ${status.cls}">${status.text}</span></td>
             <td><span class="tag version">${row.version}</span></td>
             <td>${row.creator}</td>
+            <td>${row.createTime}</td>
+            <td>${row.modifier}</td>
             <td>${row.updateTime}</td>
-            <td>
-              <button class="link" data-action="preview" data-id="${row.id}">预览</button>
-              <button class="link" data-action="edit" data-id="${row.id}">编辑</button>
-              <button class="link" data-action="copy" data-id="${row.id}">复制</button>
-              <button class="link" data-action="toggle" data-id="${row.id}">${row.status === "DISABLED" ? "启用" : "停用"}</button>
-              <button class="link" data-action="version" data-id="${row.id}">版本记录</button>
-            </td>
           </tr>
         `;
       }).join("");
@@ -1194,6 +1245,10 @@
       setTimeout(() => toast.classList.remove("show"), 1800);
     }
 
+    function hasOptionConfig(type) {
+      return type === "单选" || type === "多选";
+    }
+
     function showPreview(row) {
       document.getElementById("previewTitle").textContent = row.name;
       document.querySelector(".phone-tip").textContent = row.tip;
@@ -1202,7 +1257,7 @@
       document.getElementById("previewFields").innerHTML = row.fields.map(field => `
         <div class="submit-field">
           <label class="${field.required ? "field-label-required" : ""}">${escapeHtml(field.name)}</label>
-          <div class="${field.type.includes("上传") ? "fake-upload" : "fake-input"}">${escapeHtml(field.type)}｜${field.required ? "必填" : "非必填"}｜${escapeHtml(field.help || "请按要求填写")}</div>
+          <div class="${field.type.includes("上传") ? "fake-upload" : "fake-input"}">${escapeHtml(field.type)}｜${field.required ? "必填" : "非必填"}｜${hasOptionConfig(field.type) && field.options ? `选项：${escapeHtml(field.options)}｜` : ""}${escapeHtml(field.help || "请按要求填写")}</div>
         </div>
       `).join("");
       openModal("previewModal");
@@ -1248,7 +1303,10 @@
         name: row.querySelector('[data-field="name"]').value.trim(),
         type: row.querySelector('[data-field="type"]').value,
         required: row.querySelector('[data-field="required"]').value === "true",
-        help: row.querySelector('[data-field="help"]').value.trim()
+        help: row.querySelector('[data-field="help"]').value.trim(),
+        options: hasOptionConfig(row.querySelector('[data-field="type"]').value)
+          ? row.querySelector('[data-field="options"]').value.trim()
+          : ""
       }));
     }
 
@@ -1269,6 +1327,12 @@
             </select>
           </td>
           <td><input data-field="help" value="${escapeHtml(field.help)}" placeholder="给个人看的说明"></td>
+          <td>
+            ${hasOptionConfig(field.type)
+              ? `<input data-field="options" value="${escapeHtml(field.options || "")}" placeholder="填写选项，多个选项用 # 分隔">`
+              : `<span class="field-note">非单选/多选无需配置</span><input data-field="options" type="hidden" value="">`
+            }
+          </td>
           <td><button class="link" data-action="delete-field" data-index="${index}">删除</button></td>
         </tr>
       `).join("");
@@ -1394,6 +1458,12 @@
       showToast("字段已删除");
     });
 
+    document.getElementById("fieldConfigBody").addEventListener("change", event => {
+      if (!event.target.closest('select[data-field="type"]')) return;
+      readFieldConfigRows();
+      renderFieldConfigRows();
+    });
+
     document.getElementById("addFieldBtn").addEventListener("click", () => {
       readFieldConfigRows();
       editingFields.push({ name: "", type: "单行文本", required: false, help: "" });
@@ -1426,6 +1496,7 @@
       const status = document.getElementById("editStatus").value;
       const tip = document.getElementById("editTip").value.trim();
       const validFields = editingFields.filter(field => field.name);
+      const missingOptions = validFields.some(field => hasOptionConfig(field.type) && !field.options);
       if (!name) {
         showToast("请填写模板名称");
         return;
@@ -1438,6 +1509,10 @@
         showToast("请至少配置一个提交字段");
         return;
       }
+      if (missingOptions) {
+        showToast("请填写单选/多选字段的选项备注");
+        return;
+      }
       if (editingTemplate) {
         Object.assign(editingTemplate, {
           name,
@@ -1445,6 +1520,7 @@
           status,
           tip,
           fields: validFields,
+          modifier: "平台运营",
           updateTime: "2026-07-09 09:30:00"
         });
       } else {
@@ -1455,6 +1531,8 @@
           status,
           version: "V1",
           creator: "平台运营",
+          createTime: "2026-07-09 09:30:00",
+          modifier: "平台运营",
           updateTime: "2026-07-09 09:30:00",
           tip,
           fields: validFields

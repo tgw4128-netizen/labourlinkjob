@@ -500,9 +500,10 @@
       <button class="tree-item active" data-target="screen-overview"><span class="tree-index">1</span> 原型总览</button>
       <button class="tree-item" data-target="screen-config"><span class="tree-index">2</span> 成果模板配置</button>
       <button class="tree-item" data-target="screen-edit"><span class="tree-index">3</span> 新增/编辑模板</button>
-      <button class="tree-item" data-target="screen-version"><span class="tree-index">4</span> 版本记录</button>
-      <button class="tree-item" data-target="screen-field-view"><span class="tree-index">5</span> 查看字段</button>
-      <button class="tree-item" data-target="screen-dev"><span class="tree-index">6</span> 开发说明</button>
+      <button class="tree-item" data-target="screen-apply"><span class="tree-index">4</span> 模板应用</button>
+      <button class="tree-item" data-target="screen-version"><span class="tree-index">5</span> 版本记录</button>
+      <button class="tree-item" data-target="screen-field-view"><span class="tree-index">6</span> 查看字段</button>
+      <button class="tree-item" data-target="screen-dev"><span class="tree-index">7</span> 开发说明</button>
     </aside>
 
     <main class="canvas">
@@ -513,6 +514,7 @@
         </div>
         <div class="actions">
           <a class="btn primary" href="./template-config.html">打开成果模板配置页</a>
+          <a class="btn" href="./template-apply.html">打开模板应用页</a>
           <a class="btn" href="./template-version-record.html?templateId=TPL202607001">打开版本记录页</a>
         </div>
       </header>
@@ -537,11 +539,15 @@
             </div>
             <div class="flow-step">
               <strong>配置字段</strong>
-              <span>字段名称、字段类型、是否必填、填写说明支持自定义。</span>
+              <span>字段名称、字段类型、是否必填、填写说明支持自定义；单选/多选时填写选项备注。</span>
             </div>
             <div class="flow-step">
               <strong>启用模板</strong>
               <span>启用后岗位可复用该模板，保存启用产生版本记录。</span>
+            </div>
+            <div class="flow-step">
+              <strong>引用模板</strong>
+              <span>岗位发布时选择模板，带出字段配置，并允许当前岗位调整。</span>
             </div>
             <div class="flow-step">
               <strong>查看历史</strong>
@@ -566,6 +572,12 @@
                 <td>模板可以同时适用于多个岗位分类。</td>
               </tr>
               <tr>
+                <td>模板应用</td>
+                <td>岗位发布时选择成果模板，自动带出提交字段。</td>
+                <td><a class="tag" href="./template-apply.html">template-apply.html</a></td>
+                <td>当前岗位可在模板字段基础上单独调整。</td>
+              </tr>
+              <tr>
                 <td>版本记录</td>
                 <td>查看模板历次启用、字段调整、分类调整记录。</td>
                 <td><a class="tag" href="./template-version-record.html?templateId=TPL202607001">template-version-record.html</a></td>
@@ -573,6 +585,40 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-apply">
+        <div class="screen-head">
+          <div>
+            <h2 class="screen-title">模板应用</h2>
+            <p class="screen-desc">用于说明岗位发布时如何引用已配置模板，并带出个人端提交项。</p>
+          </div>
+          <span class="tag">需求发布</span>
+        </div>
+        <div class="screen-body">
+          <div class="wireframe">
+            <div class="fake-toolbar">
+              <span class="fake-control">岗位名称</span>
+              <span class="fake-control">岗位分类</span>
+              <span class="fake-control primary">保存岗位配置</span>
+            </div>
+            <div class="fake-table" style="grid-template-columns: 1fr 1fr;">
+              <div class="fake-cell">选择成果模板</div>
+              <div class="fake-cell">个人端提示语</div>
+              <div class="fake-cell">保洁服务成果模板</div>
+              <div class="fake-cell">上传清晰成果材料</div>
+            </div>
+          </div>
+          <div class="notes">
+            <div class="note-title">交互备注</div>
+            <ol>
+              <li>选择成果模板后，系统复制模板字段快照到当前岗位配置中。</li>
+              <li>当前岗位可修改字段名称、字段类型、是否必填、填写说明；字段类型为单选/多选时可填写选项备注。</li>
+              <li>字段表格中必填字段展示红色星号，个人端提交页按最终字段快照生成。</li>
+              <li>保存岗位时应保存“引用模板 ID、版本号、岗位字段快照”，避免模板后续变更影响已发布岗位。</li>
+            </ol>
+          </div>
         </div>
       </section>
 
@@ -641,7 +687,7 @@
           <div class="annotation">
             <span class="mark">3</span>
             <strong>字段配置范围</strong>
-            <span>只保留字段名称、字段类型、是否必填、填写说明；不需要审核说明和校验规则。</span>
+            <span>只保留字段名称、字段类型、是否必填、填写说明、备注；不需要审核说明和校验规则。</span>
           </div>
 
           <table>
@@ -688,7 +734,7 @@
                 <td><span class="required">*</span> 字段类型</td>
                 <td>下拉选择</td>
                 <td>是</td>
-                <td>单行文本、多行文本、图片上传、文件上传、日期、数字等。</td>
+                <td>单行文本、多行文本、图片上传、文件上传、视频上传、日期时间、单选、多选。</td>
               </tr>
               <tr>
                 <td><span class="required">*</span> 必填</td>
@@ -701,6 +747,12 @@
                 <td>输入框</td>
                 <td>否</td>
                 <td>作为个人端字段下方或占位提示展示。</td>
+              </tr>
+              <tr>
+                <td>备注</td>
+                <td>输入框</td>
+                <td>单选/多选时必填</td>
+                <td>字段类型为单选或多选时展示输入框，填写选项，多个选项用 # 分隔；其他类型显示“非单选/多选无需配置”。</td>
               </tr>
             </tbody>
           </table>
@@ -869,7 +921,7 @@
               </tr>
               <tr>
                 <td>字段自定义</td>
-                <td>可新增、删除字段；字段名称、字段类型、必填项红星标记完整。</td>
+                <td>可新增、删除字段；字段名称、字段类型、必填项红星标记完整；单选/多选支持选项备注。</td>
               </tr>
               <tr>
                 <td>版本记录</td>

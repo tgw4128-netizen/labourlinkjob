@@ -69,10 +69,10 @@ chmod +x deploy-oss.sh
 
 ```text
 axure-handoff.html
+template-apply.html
 template-config.html
 template-version-record.html
 index.html
-monthly-settlement.html
 ```
 
 ## 五、发给开发的链接

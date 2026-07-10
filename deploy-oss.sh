@@ -30,10 +30,10 @@ fi
 
 FILES=(
   "axure-handoff.html"
+  "template-apply.html"
   "template-config.html"
   "template-version-record.html"
   "index.html"
-  "monthly-settlement.html"
 )
 
 echo "准备部署静态原型到：$OSS_PATH"
